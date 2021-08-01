@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "alarms",
+  "info": {
+    "name": "alarm",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "send_at": {
+      "type": "datetime"
+    },
+    "opened_at": {
+      "type": "datetime"
+    },
+    "useNfc": {
+      "type": "boolean"
+    },
+    "measurements": {
+      "type": "json"
+    },
+    "template": {
+      "via": "alarms",
+      "model": "template"
+    },
+    "answers": {
+      "type": "json"
+    }
+  }
+}

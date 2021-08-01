@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "modules",
+  "info": {
+    "name": "module",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "templates": {
+      "via": "modules",
+      "collection": "template"
+    },
+    "questions": {
+      "type": "component",
+      "repeatable": true,
+      "component": "question.question"
+    }
+  }
+}

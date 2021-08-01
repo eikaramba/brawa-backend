@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "templates",
+  "info": {
+    "name": "template",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "trigger_at": {
+      "type": "datetime"
+    },
+    "isDeception": {
+      "type": "boolean"
+    },
+    "groups": {
+      "collection": "group",
+      "via": "templates",
+      "dominant": true
+    },
+    "modules": {
+      "via": "templates",
+      "collection": "module",
+      "dominant": true
+    },
+    "alarms": {
+      "via": "template",
+      "collection": "alarm"
+    },
+    "isReminder": {
+      "type": "boolean"
+    },
+    "reminderSchedule": {
+      "type": "json"
+    }
+  }
+}
