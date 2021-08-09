@@ -62,6 +62,13 @@
     "group": {
       "via": "users",
       "model": "group"
+    },
+    "alarms": {
+      "via": "user",
+      "collection": "alarm"
+    },
+    "fcmToken": {
+      "type": "string"
     }
   }
 }

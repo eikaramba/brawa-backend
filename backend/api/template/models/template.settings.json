@@ -15,15 +15,16 @@
     "name": {
       "type": "string"
     },
-    "trigger_at": {
+    "ausloesen_um": {
       "type": "datetime"
     },
-    "isDeception": {
-      "type": "boolean"
+    "fehlalarm": {
+      "type": "boolean",
+      "default": false
     },
     "groups": {
-      "collection": "group",
       "via": "templates",
+      "collection": "group",
       "dominant": true
     },
     "modules": {
@@ -35,11 +36,60 @@
       "via": "template",
       "collection": "alarm"
     },
-    "isReminder": {
+    "reminder": {
+      "type": "boolean",
+      "default": false
+    },
+    "reminder_schedule": {
+      "type": "json"
+    },
+    "ausgeloest": {
+      "type": "boolean",
+      "default": false
+    },
+    "ausgeloest_um": {
+      "type": "datetime"
+    },
+    "notification_titel": {
+      "type": "string"
+    },
+    "notification_body": {
+      "type": "text"
+    },
+    "callToAction_text": {
+      "type": "string"
+    },
+    "quittierung_frage": {
+      "type": "richtext"
+    },
+    "quittierung_text": {
+      "type": "richtext"
+    },
+    "layout": {
+      "type": "enumeration",
+      "enum": [
+        "ampelA",
+        "ampelB",
+        "prozentual"
+      ]
+    },
+    "brandwahrscheinlichkeit": {
+      "type": "integer"
+    },
+    "randomisierte_module": {
       "type": "boolean"
     },
-    "reminderSchedule": {
-      "type": "json"
+    "alarmierte_personen": {
+      "type": "integer"
+    },
+    "gamification_nutzen": {
+      "type": "boolean"
+    },
+    "nfc_nutzen": {
+      "type": "boolean"
+    },
+    "callToAction_button": {
+      "type": "string"
     }
   }
 }

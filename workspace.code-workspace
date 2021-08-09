@@ -1,0 +1,35 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"diffEditor.wordWrap": "on",
+		"editor.wordWrap": "on",
+		"editor.wordWrapColumn": 150,
+		"html.format.wrapLineLength": 150,
+		"prettier.printWidth": 150
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"type": "node",
+				"request": "launch",
+				"name": "Backend",
+				"runtimeExecutable": "npm",
+				"runtimeArgs": [
+					"run-script",
+					"develop"
+				],
+				"cwd": "${workspaceFolder}/backend",
+				"skipFiles": [
+					"<node_internals>/**"
+				],
+				"program": "${file}",
+				"port": 9229
+			}
+		]
+	}
+}

@@ -5,4 +5,10 @@
  * to customize this controller
  */
 
-module.exports = {};
+ module.exports = {
+
+    // async create(ctx) {
+    //   let entity = await strapi.services.alarm.create(ctx.request.body);
+    //   return sanitizeEntity(entity, { model: strapi.models.alarm });
+    // },
+  };

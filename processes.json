@@ -1,0 +1,19 @@
+{
+  "apps" : [{
+    "name"        : "backend",
+    "cwd"         : "/home/brawauser/brawa/repo/backend",
+    "script"      : "./server.js",
+    "ignoreWatch" : ["[\\/\\\\]\\./", "node_modules"],
+    "watch"       : "false",
+    "env": {
+        "ENV_PATH":"/home/brawauser/brawa/repo/backend/.env.production",
+        "NODE_ENV": "production"
+    },
+    "exec_mode"  : "cluster_mode",
+    "error" : "/home/brawauser/brawa/logs/backend-err.log",
+    "output"   : "/home/brawauser/brawa/logs/backend-out.log",
+    "port":1338,
+    "time": true
+  }
+]
+}

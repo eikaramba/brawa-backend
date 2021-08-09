@@ -1,0 +1,56 @@
+[
+  {
+    "id": "github",
+    "execute-command": "/home/brawauser/brawa/repo/redeploy.sh",
+    "command-working-directory": "/home/brawauser/brawa/repo",
+    "response-message": "I got the payload!",
+    "response-headers":
+    [
+      {
+        "name": "Access-Control-Allow-Origin",
+        "value": "*"
+      }
+    ],
+    "pass-arguments-to-command":
+    [
+      {
+        "source": "payload",
+        "name": "ref"
+      },
+      {
+        "source": "payload",
+        "name": "pusher.name"
+      }
+    ],
+    "trigger-rule":
+    {
+      "and":
+      [
+        {
+          "match":
+          {
+            "type": "payload-hash-sha1",
+            "secret": "1e8dc2ced35b31f57b61b0abe71a3a585a2136f2576ce114ac6bdb599743434f",
+            "parameter":
+            {
+              "source": "header",
+              "name": "X-Hub-Signature"
+            }
+          }
+        },
+        {
+          "match":
+          {
+            "type": "value",
+            "value": "refs/heads/release",
+            "parameter":
+            {
+              "source": "payload",
+              "name": "ref"
+            }
+          }
+        }
+      ]
+    }
+  }
+]

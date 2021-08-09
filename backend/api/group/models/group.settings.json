@@ -8,14 +8,14 @@
   "options": {
     "increments": true,
     "timestamps": true,
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
     "users": {
+      "via": "group",
       "plugin": "users-permissions",
-      "collection": "user",
-      "via": "group"
+      "collection": "user"
     },
     "name": {
       "type": "string"

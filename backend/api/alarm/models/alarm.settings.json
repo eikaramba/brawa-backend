@@ -8,7 +8,7 @@
   "options": {
     "increments": true,
     "timestamps": true,
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -17,9 +17,6 @@
     },
     "opened_at": {
       "type": "datetime"
-    },
-    "useNfc": {
-      "type": "boolean"
     },
     "measurements": {
       "type": "json"
@@ -30,6 +27,11 @@
     },
     "answers": {
       "type": "json"
+    },
+    "user": {
+      "via": "alarms",
+      "plugin": "users-permissions",
+      "model": "user"
     }
   }
 }

@@ -12,10 +12,9 @@
 
 module.exports = {
   /**
-   * Simple example.
-   * Every monday at 1am.
+   * might NOT WORK because of pm2 see https://strapi.io/documentation/developer-docs/latest/guides/scheduled-publication.html#create-a-cron-task
    */
-  // '0 1 * * 1': () => {
-  //
+  // '*/5 * * * *': async () => {
+  //   await strapi.api.template.services.template.checkAlarms();
   // }
 };
