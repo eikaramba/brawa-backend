@@ -56,9 +56,6 @@
     "notification_body": {
       "type": "text"
     },
-    "callToAction_text": {
-      "type": "string"
-    },
     "quittierung_frage": {
       "type": "richtext"
     },

@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_components_textfields",
+  "info": {
+    "name": "textfield",
+    "icon": "i-cursor"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string"
+    }
+  }
+}

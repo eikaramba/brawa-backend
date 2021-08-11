@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_components_questions",
+  "info": {
+    "name": "question",
+    "icon": "check-square"
+  },
+  "options": {},
+  "attributes": {
+    "question": {
+      "type": "string"
+    },
+    "answers": {
+      "type": "component",
+      "repeatable": true,
+      "component": "components.textfield"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_components_textareas",
+  "info": {
+    "name": "textarea",
+    "icon": "align-left"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "richtext"
+    }
+  }
+}

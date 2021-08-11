@@ -27,12 +27,12 @@ module.exports = {
                 custom: {
                     id:result.id,
                     template: {
+                        id: result.template.id,
                         fehlalarm: result.template.fehlalarm,
                         reminder: result.template.reminder,
                         layout: result.template.layout,
                         reminder: result.template.reminder,
                         callToAction_text: result.template.callToAction_text,
-                        quittierung_frage: result.template.quittierung_frage,
                         quittierung_text: result.template.quittierung_text,
                         brandwahrscheinlichkeit: result.template.brandwahrscheinlichkeit,
                         alarmierte_personen: result.template.alarmierte_personen,

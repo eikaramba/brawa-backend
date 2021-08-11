@@ -19,10 +19,13 @@
       "via": "modules",
       "collection": "template"
     },
-    "questions": {
-      "type": "component",
-      "repeatable": true,
-      "component": "question.question"
+    "components": {
+      "type": "dynamiczone",
+      "components": [
+        "components.textarea",
+        "components.question",
+        "components.textfield"
+      ]
     }
   }
 }
