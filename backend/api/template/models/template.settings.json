@@ -27,6 +27,21 @@
       "collection": "group",
       "dominant": true
     },
+    "notification_titel": {
+      "type": "string"
+    },
+    "notification_body": {
+      "type": "text"
+    },
+    "brandwahrscheinlichkeit": {
+      "type": "integer"
+    },
+    "callToAction_button": {
+      "type": "string"
+    },
+    "callToAction_text": {
+      "type": "richtext"
+    },
     "modules": {
       "via": "templates",
       "collection": "module",
@@ -40,25 +55,6 @@
       "type": "boolean",
       "default": false
     },
-    "reminder_schedule": {
-      "type": "json"
-    },
-    "ausgeloest": {
-      "type": "boolean",
-      "default": false
-    },
-    "ausgeloest_um": {
-      "type": "datetime"
-    },
-    "notification_titel": {
-      "type": "string"
-    },
-    "notification_body": {
-      "type": "text"
-    },
-    "quittierung_frage": {
-      "type": "richtext"
-    },
     "quittierung_text": {
       "type": "richtext"
     },
@@ -69,9 +65,6 @@
         "ampelB",
         "prozentual"
       ]
-    },
-    "brandwahrscheinlichkeit": {
-      "type": "integer"
     },
     "randomisierte_module": {
       "type": "boolean"
@@ -85,8 +78,17 @@
     "nfc_nutzen": {
       "type": "boolean"
     },
-    "callToAction_button": {
-      "type": "string"
+    "reminder_schedule": {
+      "type": "json"
+    },
+    "ausgeloest": {
+      "type": "boolean",
+      "default": false,
+      "configurable": false
+    },
+    "ausgeloest_um": {
+      "type": "datetime",
+      "configurable": false
     }
   }
 }
