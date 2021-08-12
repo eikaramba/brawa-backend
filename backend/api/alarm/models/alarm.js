@@ -68,6 +68,7 @@ module.exports = {
                 pushType: 'alert',
             };
           const pushResult = await push.send(result.user.fcmToken, data);
+          console.log(pushResult);
         },
       },
 };

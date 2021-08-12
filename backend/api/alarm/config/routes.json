@@ -47,6 +47,14 @@
       "config": {
         "policies": []
       }
+    },
+    {
+      "method": "POST",
+      "path": "/alarms/:id/moduleResults/:moduleStep",
+      "handler": "alarm.addModuleResult",
+      "config": {
+        "policies": []
+      }
     }
   ]
 }

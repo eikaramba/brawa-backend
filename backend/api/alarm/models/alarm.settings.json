@@ -25,13 +25,16 @@
       "via": "alarms",
       "model": "template"
     },
-    "answers": {
+    "moduleResults": {
       "type": "json"
     },
     "user": {
       "via": "alarms",
       "plugin": "users-permissions",
       "model": "user"
+    },
+    "confirmed_at": {
+      "type": "datetime"
     }
   }
 }
