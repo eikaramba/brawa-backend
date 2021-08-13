@@ -18,6 +18,9 @@
     "multipleAnswersAllowed": {
       "type": "boolean",
       "default": false
+    },
+    "isRanking": {
+      "type": "boolean"
     }
   }
 }
