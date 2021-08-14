@@ -11,17 +11,6 @@
         "value": "*"
       }
     ],
-    "pass-arguments-to-command":
-    [
-      {
-        "source": "payload",
-        "name": "ref"
-      },
-      {
-        "source": "payload",
-        "name": "pusher.name"
-      }
-    ],
     "trigger-rule":
     {
       "and":
@@ -30,11 +19,11 @@
           "match":
           {
             "type": "value",
-            "value": "refs/heads/release",
+            "value": "release",
             "parameter":
             {
               "source": "payload",
-              "name": "ref"
+              "name": "payload.push.changes.0.new.name"
             }
           }
         }

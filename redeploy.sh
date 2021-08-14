@@ -12,7 +12,7 @@ exec > /home/pi/brawa/webhook_output.log 2>&1
 # only checking out the master (or whatever branch you would like to deploy)
 #if [ "$ref" = "refs/heads/$BRANCH" ];
 #then
-    echo "Branch release received. Deploying ${BRANCH} branch ..."
+    echo "Branch release received. Deploying ..."
     cd /home/pi/brawa/repo/ &&
     git pull
 
