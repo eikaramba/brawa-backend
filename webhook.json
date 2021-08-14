@@ -13,21 +13,16 @@
     ],
     "trigger-rule":
     {
-      "and":
-      [
+      "match":
+      {
+        "type": "value",
+        "value": "release",
+        "parameter":
         {
-          "match":
-          {
-            "type": "value",
-            "value": "release",
-            "parameter":
-            {
-              "source": "payload",
-              "name": "payload.push.changes.0.new.name"
-            }
-          }
+          "source": "payload",
+          "name": "payload.push.changes.0.new.name"
         }
-      ]
+      }
     }
   }
 ]
