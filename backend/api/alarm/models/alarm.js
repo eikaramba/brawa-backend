@@ -39,6 +39,7 @@ module.exports = {
                         gamification_nutzen: result.template.gamification_nutzen,
                         nfc_nutzen: result.template.nfc_nutzen,
                         callToAction_button: result.template.callToAction_button,
+                        randomisierte_module: result.template.randomisierte_module,
                     }
                 },
                 icon: 'notification_icon', // gcm for android
