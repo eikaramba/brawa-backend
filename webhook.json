@@ -1,8 +1,8 @@
 [
   {
-    "id": "github",
-    "execute-command": "/home/brawauser/brawa/repo/redeploy.sh",
-    "command-working-directory": "/home/brawauser/brawa/repo",
+    "id": "bitbucket",
+    "execute-command": "/home/pi/brawa/repo/redeploy.sh",
+    "command-working-directory": "/home/pi/brawa/repo",
     "response-message": "I got the payload!",
     "response-headers":
     [
