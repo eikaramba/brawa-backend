@@ -5,13 +5,29 @@
  * to customize this controller
  */
  const { sanitizeEntity } = require('strapi-utils');
+ const isOwner = require("../../../config/policies/isOwner");
  
+ const ownerPath = "user.id";
  module.exports = {
 
-    // async create(ctx) {
-    //   let entity = await strapi.services.alarm.create(ctx.request.body);
-    //   return sanitizeEntity(entity, { model: strapi.models.alarm });
-    // },
+  async find(ctx) {
+    ctx.query = await isOwner(ctx, ownerPath); //custom code to prevent access
+    let entities;
+    if (ctx.query._q) {
+      entities = await strapi.services.alarm.search(ctx.query);
+    } else {
+      entities = await strapi.services.alarm.find(ctx.query);
+    }
+
+    return entities.map(entity => sanitizeEntity(entity, { model: strapi.models.alarm }));
+  },
+  async findOne(ctx) {
+    const { id } = ctx.params;
+
+    const entity = await strapi.services.alarm.findOne({ id });
+    await isOwner(ctx, ownerPath, entity); //custom code to prevent access
+    return sanitizeEntity(entity, { model: strapi.models.alarm });
+  },
 
     async addModuleResult(ctx) {
       const { id,moduleStep } = ctx.params;

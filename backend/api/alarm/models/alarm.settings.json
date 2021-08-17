@@ -18,9 +18,6 @@
     "opened_at": {
       "type": "datetime"
     },
-    "measurements": {
-      "type": "json"
-    },
     "template": {
       "via": "alarms",
       "model": "template"
