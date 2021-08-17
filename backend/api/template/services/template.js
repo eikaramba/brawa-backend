@@ -5,7 +5,7 @@
  * to customize this service
  */
 var dayjs = require('dayjs')
-
+const util = require('util')
 
 module.exports = {
 
@@ -14,26 +14,29 @@ module.exports = {
         let alarmsCounter=0;
         // const overdueAlarms = await strapi.query('template').find({ausgeloest:false,ausloesen_um_lt: new Date()});
 
-        const overdueAlarms = await strapi
+        const overdueAlarms = (await strapi
             .query('template')
             .model.query(qb => {
                 qb.where('ausgeloest', false).orWhere('reminder', true);
-                qb.where('ausloesen_um_lt', new Date());
+                qb.where('ausloesen_um', '<',new Date());
             })
-        .fetch();
-        console.log(overdueAlarms);
+        .fetchAll({withRelated: ['groups', {'groups.users': qb => qb.columns('id','group','fcmToken')}]})).toJSON();
+        // console.log(util.inspect(overdueAlarms, {showHidden: false, depth: null}));
+
+
 
 
         for (const alarm of overdueAlarms) {
             for (const group of alarm.groups) {
                 for (const user of group.users) {
+                    console.log(user);
                     if(!user.fcmToken) continue; //do not send notifications to users without fcmToken
                     const params = {
                         template: alarm.id,
                         user: user.id,
                     };
                     
-                    // await strapi.query('alarm').create(params);
+                    await strapi.query('alarm').create(params);
                     alarmsCounter++;
                 }
             }
@@ -43,7 +46,7 @@ module.exports = {
             };
 
             if(alarm.reminder) {
-                update.ausloesen_um = dayjs().add(alarm.reminder_schedule, 'day')
+                update.ausloesen_um = dayjs().add(alarm.reminder_schedule, 'day').toDate()
             }
             await strapi.query('template').update({ id: alarm.id }, update );
         }
