@@ -9,10 +9,12 @@
     "dev-admin": "strapi develop --watch-admin",
     "start": "strapi start",
     "build": "cross-env NODE_ENV=production ENV_PATH=.env.production strapi build",
+    "build-dev": "strapi build",
     "strapi": "strapi"
   },
   "dependencies": {
     "dayjs": "^1.10.6",
+    "json2csv": "^5.0.6",
     "knex": "0.21.18",
     "node-pushnotifications": "^1.7.1",
     "sqlite3": "5.0.2",

@@ -20,7 +20,7 @@
     "email": {
       "type": "email",
       "minLength": 6,
-      "private": true,
+      "private": false,
       "configurable": false,
       "required": true
     },
