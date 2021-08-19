@@ -57,9 +57,11 @@
 
     async update(ctx) {
       const { id } = ctx.params;
+      if(!id) return;
 
       if(ctx.request.body.opened_at) {
         const currentEntry = await strapi.query('alarm').findOne({id}, ['opened_at']);
+        if(!currentEntry) return;
         if(currentEntry.opened_at) delete ctx.request.body.opened_at
       }
   
