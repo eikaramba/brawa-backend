@@ -32,6 +32,12 @@
     },
     "confirmed_at": {
       "type": "datetime"
+    },
+    "accelerometerMaximum": {
+      "type": "float"
+    },
+    "accelerometerTotal": {
+      "type": "float"
     }
   }
 }
