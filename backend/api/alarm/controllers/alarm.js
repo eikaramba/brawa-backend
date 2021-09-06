@@ -35,13 +35,22 @@
         const currentEntry = await strapi.query('alarm').findOne({id}, ['moduleResults']);
         //iterate over currentEntry.moduleResults and check if the moduleStep is already in there. If yes, update the result, if not add it
         if(currentEntry.moduleResults) {
-          currentEntry.moduleResults.forEach((entry) => {
+          let foundExisting=false;
+          for (let entry of currentEntry.moduleResults) {
             if(entry.moduleStep === moduleStep) {
+              foundExisting=true;
               entry.results = ctx.request.body.results;
               entry.moduleId = ctx.request.body.moduleId;
               entry.submitted_at = ctx.request.body.submitted_at;
+              break;
             }
-          });
+          };
+          if(!foundExisting){
+            currentEntry.moduleResults = [...currentEntry.moduleResults,{
+              moduleStep,
+              ...ctx.request.body
+            }];
+          }
         }
         else {
           currentEntry.moduleResults = [{
