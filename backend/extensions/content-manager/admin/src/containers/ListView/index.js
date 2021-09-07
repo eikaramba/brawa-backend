@@ -1,14 +1,21 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators, compose } from 'redux';
-import { get, isEmpty } from 'lodash';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { useHistory, useLocation } from 'react-router-dom';
-import { Header } from '@buffetjs/custom';
-import { Flex, Padded } from '@buffetjs/core';
-import isEqual from 'react-fast-compare';
-import { stringify } from 'qs';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { bindActionCreators, compose } from "redux";
+import { get, isEmpty } from "lodash";
+import { FormattedMessage, useIntl } from "react-intl";
+import { useHistory, useLocation } from "react-router-dom";
+import { Header } from "@buffetjs/custom";
+import { Flex, Padded } from "@buffetjs/core";
+import isEqual from "react-fast-compare";
+import { stringify } from "qs";
 import {
   CheckPermissions,
   InjectionZone,
@@ -18,19 +25,19 @@ import {
   useQueryParams,
   useUser,
   request,
-} from 'strapi-helper-plugin';
-import pluginId from '../../pluginId';
-import pluginPermissions from '../../permissions';
-import { formatFiltersFromQuery, getRequestUrl, getTrad } from '../../utils';
-import Container from '../../components/Container';
-import CustomTable from '../../components/CustomTable';
-import FilterPicker from '../../components/FilterPicker';
-import Search from '../../components/Search';
-import ListViewProvider from '../ListViewProvider';
-import { AddFilterCta, FilterIcon, Wrapper } from './components';
-import FieldPicker from './FieldPicker';
-import Filter from './Filter';
-import Footer from './Footer';
+} from "strapi-helper-plugin";
+import pluginId from "../../pluginId";
+import pluginPermissions from "../../permissions";
+import { formatFiltersFromQuery, getRequestUrl, getTrad } from "../../utils";
+import Container from "../../components/Container";
+import CustomTable from "../../components/CustomTable";
+import FilterPicker from "../../components/FilterPicker";
+import Search from "../../components/Search";
+import ListViewProvider from "../ListViewProvider";
+import { AddFilterCta, FilterIcon, Wrapper } from "./components";
+import FieldPicker from "./FieldPicker";
+import Filter from "./Filter";
+import Footer from "./Footer";
 import {
   getData,
   getDataSucceeded,
@@ -46,10 +53,17 @@ import {
   setLayout,
   onChangeListHeaders,
   onResetListHeaders,
-} from './actions';
-import makeSelectListView from './selectors';
-import { getAllAllowedHeaders, getFirstSortableHeader, buildQueryString } from './utils';
-const { Parser, transforms: { unwind,flatten } } = require('json2csv');
+} from "./actions";
+import makeSelectListView from "./selectors";
+import {
+  getAllAllowedHeaders,
+  getFirstSortableHeader,
+  buildQueryString,
+} from "./utils";
+const {
+  Parser,
+  transforms: { unwind, flatten },
+} = require("json2csv");
 
 /* eslint-disable react/no-array-index-key */
 function ListView({
@@ -86,7 +100,11 @@ function ListView({
     contentType: {
       attributes,
       metadatas,
-      settings: { bulkable: isBulkable, filterable: isFilterable, searchable: isSearchable },
+      settings: {
+        bulkable: isBulkable,
+        filterable: isFilterable,
+        searchable: isSearchable,
+      },
     },
   } = layout;
 
@@ -105,23 +123,25 @@ function ListView({
   const [isFilterPickerOpen, setFilterPickerState] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
   const contentType = layout.contentType;
-  const hasDraftAndPublish = get(contentType, 'options.draftAndPublish', false);
-  const allAllowedHeaders = useMemo(() => getAllAllowedHeaders(attributes), [attributes]);
+  const hasDraftAndPublish = get(contentType, "options.draftAndPublish", false);
+  const allAllowedHeaders = useMemo(
+    () => getAllAllowedHeaders(attributes),
+    [attributes]
+  );
 
   const filters = useMemo(() => {
     return formatFiltersFromQuery(query);
   }, [query]);
 
   const _sort = query._sort;
-  const _q = query._q || '';
+  const _q = query._q || "";
 
   const label = contentType.info.label;
 
-  const firstSortableHeader = useMemo(() => getFirstSortableHeader(displayedHeaders), [
-    displayedHeaders,
-  ]);
-
-
+  const firstSortableHeader = useMemo(
+    () => getFirstSortableHeader(displayedHeaders),
+    [displayedHeaders]
+  );
 
   useEffect(() => {
     setFilterPickerState(false);
@@ -129,7 +149,7 @@ function ListView({
 
   // Using a ref to avoid requests being fired multiple times on slug on change
   // We need it because the hook as mulitple dependencies so it may run before the permissions have checked
-  const requestUrlRef = useRef('');
+  const requestUrlRef = useRef("");
 
   const fetchData = useCallback(
     async (endPoint, abortSignal = false) => {
@@ -137,26 +157,29 @@ function ListView({
       const signal = abortSignal || new AbortController().signal;
 
       try {
-        const { results, pagination } = await request(endPoint, { method: 'GET', signal });
+        const { results, pagination } = await request(endPoint, {
+          method: "GET",
+          signal,
+        });
 
         getDataSucceeded(pagination, results);
       } catch (err) {
-        const resStatus = get(err, 'response.status', null);
+        const resStatus = get(err, "response.status", null);
         console.log(err);
 
         if (resStatus === 403) {
           await fetchPermissionsRef.current();
 
-          strapi.notification.info(getTrad('permissions.not-allowed.update'));
+          strapi.notification.info(getTrad("permissions.not-allowed.update"));
 
-          push('/');
+          push("/");
 
           return;
         }
 
-        if (err.name !== 'AbortError') {
+        if (err.name !== "AbortError") {
           console.error(err);
-          strapi.notification.error(getTrad('error.model.fetch'));
+          strapi.notification.error(getTrad("error.model.fetch"));
         }
       }
     },
@@ -169,11 +192,11 @@ function ListView({
 
       if (value && displayedHeaders.length === 1) {
         strapi.notification.toggle({
-          type: 'warning',
-          message: { id: 'content-manager.notification.error.displayedFields' },
+          type: "warning",
+          message: { id: "content-manager.notification.error.displayedFields" },
         });
       } else {
-        emitEventRef.current('didChangeDisplayedFields');
+        emitEventRef.current("didChangeDisplayedFields");
 
         onChangeListHeaders({ name, value });
       }
@@ -181,147 +204,146 @@ function ListView({
     [displayedHeaders, onChangeListHeaders]
   );
 
+  const downloadAsCSV = function (text, opts) {
+    var blob = new Blob([opts.bom ? "\ufeff" + text : text]);
 
-
-
-const downloadAsCSV = function(text,opts){
-  var blob = new Blob([opts.bom ? "\ufeff" + text : text]);
-
-    if (window.navigator.msSaveOrOpenBlob) { // compat: ie10
+    if (window.navigator.msSaveOrOpenBlob) {
+      // compat: ie10
       window.navigator.msSaveOrOpenBlob(blob, opts.filename);
     } else {
       var a = document.createElement("a");
-      a.setAttribute("href", URL.createObjectURL(blob, {type: opts.mime}));
+      a.setAttribute("href", URL.createObjectURL(blob, { type: opts.mime }));
       a.setAttribute("download", opts.filename);
       a.setAttribute("target", "_blank");
       a.style.display = "none";
       document.body.appendChild(a);
       a.click();
-      setTimeout(function() {
+      setTimeout(function () {
         document.body.removeChild(a);
       }, 0);
     }
-  }
+  };
 
-//  const exportAsCSV = function(arr,opts){
-//     opts = opts || {};
-//     opts.filename = opts.filename || "export.csv";
-//     opts.sep = opts.sep || "auto";
-//     opts.eol = opts.eol || "\r\n";
-//     opts.bom = typeof opts.bom === "boolean" ? opts.bom : true;
-//     opts.quote = opts.quote || '"';
-//     opts.mime = opts.mime || "text/csv;charset=utf-8";
+  //  const exportAsCSV = function(arr,opts){
+  //     opts = opts || {};
+  //     opts.filename = opts.filename || "export.csv";
+  //     opts.sep = opts.sep || "auto";
+  //     opts.eol = opts.eol || "\r\n";
+  //     opts.bom = typeof opts.bom === "boolean" ? opts.bom : true;
+  //     opts.quote = opts.quote || '"';
+  //     opts.mime = opts.mime || "text/csv;charset=utf-8";
 
-//     if (opts.sep === "auto") {
-//       if ("toLocaleString" in Number.prototype) {
-//         opts.sep = (1.2).toLocaleString().substring(1, 2) === "," ? ";" : ",";
-//       } else {
-//         opts.sep = ",";
-//       }
-//     }
+  //     if (opts.sep === "auto") {
+  //       if ("toLocaleString" in Number.prototype) {
+  //         opts.sep = (1.2).toLocaleString().substring(1, 2) === "," ? ";" : ",";
+  //       } else {
+  //         opts.sep = ",";
+  //       }
+  //     }
 
-//     var quoteRe = new RegExp(opts.quote, "g");
-//     var sepRe = new RegExp(opts.sep, "g");
+  //     var quoteRe = new RegExp(opts.quote, "g");
+  //     var sepRe = new RegExp(opts.sep, "g");
 
-//     opts.formatter = opts.formatter || function(value) {
-//       var quoted = false;
+  //     opts.formatter = opts.formatter || function(value) {
+  //       var quoted = false;
 
-//       if (typeof value !== "string") {
-//         value = JSON.stringify(value) || "";
-//       }
+  //       if (typeof value !== "string") {
+  //         value = JSON.stringify(value) || "";
+  //       }
 
-//       // escape quotes by doubling the quotes and wrapping in quotes
-//       if (quoteRe.test(value)) {
-//         value = opts.quote + value.replace(quoteRe, opts.quote + opts.quote) + opts.quote;
-//         quoted = true;
-//       }
+  //       // escape quotes by doubling the quotes and wrapping in quotes
+  //       if (quoteRe.test(value)) {
+  //         value = opts.quote + value.replace(quoteRe, opts.quote + opts.quote) + opts.quote;
+  //         quoted = true;
+  //       }
 
-//       // escape separator by wrapping in quotes
-//       if (sepRe.test(value) && !quoted) {
-//         value = opts.quote + value + opts.quote;
-//       }
+  //       // escape separator by wrapping in quotes
+  //       if (sepRe.test(value) && !quoted) {
+  //         value = opts.quote + value + opts.quote;
+  //       }
 
-//       return value;
-//     };
+  //       return value;
+  //     };
 
-//     // build headers from first element in array
-//     var paths = [];
-//     //move moduleResults to the end of the array
-//     //https://stackoverflow.com/questions/24909371/move-item-in-array-to-last-position
-//     let firstLevelKeys = Object.keys(arr[0]);
-//     // firstLevelKeys.map((elem, index) => {
-//     //   if(elem.toLowerCase() === "moduleResults".toLowerCase()){
-//     //     firstLevelKeys.splice(index, 1);
-//     //     firstLevelKeys.push(elem);
-//     //   }
-//     // })
-//     if(firstLevelKeys.indexOf("moduleResults")>-1)
-//     firstLevelKeys.push(firstLevelKeys.splice(firstLevelKeys.indexOf("moduleResults"), 1)[0]);
+  //     // build headers from first element in array
+  //     var paths = [];
+  //     //move moduleResults to the end of the array
+  //     //https://stackoverflow.com/questions/24909371/move-item-in-array-to-last-position
+  //     let firstLevelKeys = Object.keys(arr[0]);
+  //     // firstLevelKeys.map((elem, index) => {
+  //     //   if(elem.toLowerCase() === "moduleResults".toLowerCase()){
+  //     //     firstLevelKeys.splice(index, 1);
+  //     //     firstLevelKeys.push(elem);
+  //     //   }
+  //     // })
+  //     if(firstLevelKeys.indexOf("moduleResults")>-1)
+  //     firstLevelKeys.push(firstLevelKeys.splice(firstLevelKeys.indexOf("moduleResults"), 1)[0]);
 
+  //     (function scan(prefix, obj, keys) {
+  //       keys.forEach(function(key) {
+  //         var path = prefix ? prefix + "." + key : key;
+  //         if (typeof obj[key] === "object" && obj[key] !== null) {
+  //           scan(path, obj[key], Object.keys(obj[key]));
+  //         } else {
+  //           paths.push(opts.formatter(path));
+  //         }
+  //       });
+  //     })(null, arr[0], firstLevelKeys);
+  //     var header = paths.join(opts.sep) + opts.eol;
 
-//     (function scan(prefix, obj, keys) {
-//       keys.forEach(function(key) {
-//         var path = prefix ? prefix + "." + key : key;
-//         if (typeof obj[key] === "object" && obj[key] !== null) {
-//           scan(path, obj[key], Object.keys(obj[key]));
-//         } else {
-//           paths.push(opts.formatter(path));
-//         }
-//       });
-//     })(null, arr[0], firstLevelKeys);
-//     var header = paths.join(opts.sep) + opts.eol;
+  //     // build body
+  //     var body = arr.map(function(obj) {
+  //       var row = [];
+  //       (function scan(obj, keys) {
+  //         if(keys.indexOf("moduleResults")>-1) {
+  //           keys.push(keys.splice(keys.indexOf("moduleResults"), 1)[0]);
+  //         }
+  //         keys.forEach(function(key) {
+  //           if (typeof obj[key] === "object" && obj[key] !== null) {
+  //             scan(obj[key], Object.keys(obj[key]));
+  //           } else {
+  //             row.push(opts.formatter(obj[key]));
+  //           }
+  //         });
+  //       })(obj, Object.keys(obj));
+  //       return row.join(opts.sep);
+  //     }).join(opts.eol);
 
-//     // build body
-//     var body = arr.map(function(obj) {
-//       var row = [];
-//       (function scan(obj, keys) {
-//         if(keys.indexOf("moduleResults")>-1) {
-//           keys.push(keys.splice(keys.indexOf("moduleResults"), 1)[0]);
-//         }
-//         keys.forEach(function(key) {
-//           if (typeof obj[key] === "object" && obj[key] !== null) {
-//             scan(obj[key], Object.keys(obj[key]));
-//           } else {
-//             row.push(opts.formatter(obj[key]));
-//           }
-//         });
-//       })(obj, Object.keys(obj));
-//       return row.join(opts.sep);
-//     }).join(opts.eol);
-
-//     // build a link and trigger a download
-//     var text = header + body;
-//     downloadAsCSV(text,opts);
-//   }
-
-
-
-
-
+  //     // build a link and trigger a download
+  //     var text = header + body;
+  //     downloadAsCSV(text,opts);
+  //   }
 
   const handleExportAllData = useCallback(async () => {
     try {
-      if(label=='Templates'){
+      if (label == "Templates") {
         // const result = await request(`/${label.toLowerCase()}?id_in=${entriesToDelete.join('&id_in=')}`, {
-        //   method: 'GET' 
+        //   method: 'GET'
         // });
         // console.log(result);
-        const templateResults = await request(`/${label.toLowerCase()}?id_in=${entriesToDelete.join('&id_in=')}  `, {
-            method: 'GET'
-          });
-        for(const templateResult of templateResults){
-          const results = await request(`/alarms?id_in=${templateResult.alarms.map(a=>a.id).join('&id_in=')}`, {
-            method: 'GET'
-          });
-          if(results.length>0){
+        const templateResults = await request(
+          `/${label.toLowerCase()}?id_in=${entriesToDelete.join("&id_in=")}  `,
+          {
+            method: "GET",
+          }
+        );
+        for (const templateResult of templateResults) {
+          const results = await request(
+            `/alarms?id_in=${templateResult.alarms
+              .map((a) => a.id)
+              .join("&id_in=")}`,
+            {
+              method: "GET",
+            }
+          );
+          if (results.length > 0) {
             // console.log(results);
             // let countMaxResults = 0;
             // results.forEach(result => {
             //   if(result.moduleResults) countMaxResults++;
             // });
 
-
-            results.forEach(result => {
+            results.forEach((result) => {
               result.user = result.user.email;
               delete result.template.callToAction_button;
               delete result.template.callToAction_text;
@@ -337,109 +359,124 @@ const downloadAsCSV = function(text,opts){
             });
 
             // exportAsCSV(results,{filename:templateResult.name+'.csv'});
-            const fields = ['id', 'created_at','template.id','template.ausloesen_um','template.ausgeloest','template.ausgeloest_um','template.fehlalarm','template.brandwahrscheinlichkeit','template.layout','template.randomisierte_module','template.alarmierte_personen','template.gamification_nutzen','template.nfc_nutzen','user','moduleResults.moduleStep','moduleResults.moduleId','moduleResults.submitted_at','moduleResults.results.label','moduleResults.results.answers'];
-            const transforms = [unwind({ paths: ['moduleResults','moduleResults.results'] })];
+            const fields = [
+              { label: "alarm.id", value: "id" },
+              "user",
+              "send_at",
+              "opened_at",
+              "confirmed_at",
+              "accelerometerMaximum",
+              "accelerometerTotal",
+              "template.id",
+              "template.ausloesen_um",
+              "template.ausgeloest",
+              "template.ausgeloest_um",
+              "template.fehlalarm",
+              "template.brandwahrscheinlichkeit",
+              "template.layout",
+              "template.randomisierte_module",
+              "template.alarmierte_personen",
+              "template.gamification_nutzen",
+              "template.nfc_nutzen",
+              { label: "module.step", value: "moduleResults.moduleStep" },
+              { label: "module.id", value: "moduleResults.moduleId" },
+              {
+                label: "module.submitted_at",
+                value: "moduleResults.submitted_at",
+              },
+              {
+                label: "moduleResult.label",
+                value: "moduleResults.results.label",
+              },
+              {
+                label: "moduleResult.answer",
+                value: "moduleResults.results.answer",
+              },
+            ];
+            const transforms = [
+              unwind({ paths: ["moduleResults", "moduleResults.results"] }),
+            ];
             // const fields = ['id', 'send_at', 'opened_at','template.id','moduleResults.moduleStep','moduleResults.results'];
             // const transforms = [unwind({ paths: ['moduleResults'] })];
-            const json2csvParser = new Parser({ delimiter: ';', quote: '',fields, transforms });
+            const json2csvParser = new Parser({
+              delimiter: ";",
+              quote: "",
+              fields,
+              transforms,
+            });
             const csv = json2csvParser.parse(results);
-            
-            console.log(csv);
-            downloadAsCSV(csv,{filename:templateResult.name+'.csv'});
+
+            downloadAsCSV(csv, { filename: templateResult.name + ".csv" });
           }
         }
-
-        
       }
-
     } catch (err) {
       strapi.notification.error(err.toString());
     }
-  }, [fetchData,entriesToDelete]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  }, [fetchData, entriesToDelete]);
 
   const handleConfirmDeleteAllData = useCallback(async () => {
     try {
       setModalLoadingState();
 
-      await request(getRequestUrl(`collection-types/${slug}/actions/bulkDelete`), {
-        method: 'POST',
-        body: { ids: entriesToDelete },
-      });
+      await request(
+        getRequestUrl(`collection-types/${slug}/actions/bulkDelete`),
+        {
+          method: "POST",
+          body: { ids: entriesToDelete },
+        }
+      );
 
       onDeleteSeveralDataSucceeded();
-      emitEventRef.current('didBulkDeleteEntries');
+      emitEventRef.current("didBulkDeleteEntries");
     } catch (err) {
       strapi.notification.error(`${pluginId}.error.record.delete`);
     }
-  }, [entriesToDelete, onDeleteSeveralDataSucceeded, slug, setModalLoadingState]);
+  }, [
+    entriesToDelete,
+    onDeleteSeveralDataSucceeded,
+    slug,
+    setModalLoadingState,
+  ]);
 
   const handleConfirmDeleteData = useCallback(async () => {
     try {
       let trackerProperty = {};
 
       if (hasDraftAndPublish) {
-        const dataToDelete = data.find(obj => obj.id.toString() === idToDelete.toString());
+        const dataToDelete = data.find(
+          (obj) => obj.id.toString() === idToDelete.toString()
+        );
         const isDraftEntry = isEmpty(dataToDelete.published_at);
-        const status = isDraftEntry ? 'draft' : 'published';
+        const status = isDraftEntry ? "draft" : "published";
 
         trackerProperty = { status };
       }
 
-      emitEventRef.current('willDeleteEntry', trackerProperty);
+      emitEventRef.current("willDeleteEntry", trackerProperty);
       setModalLoadingState();
 
       await request(getRequestUrl(`collection-types/${slug}/${idToDelete}`), {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       strapi.notification.toggle({
-        type: 'success',
+        type: "success",
         message: { id: `${pluginId}.success.record.delete` },
       });
 
       // Close the modal and refetch data
       onDeleteDataSucceeded();
-      emitEventRef.current('didDeleteEntry', trackerProperty);
+      emitEventRef.current("didDeleteEntry", trackerProperty);
     } catch (err) {
       const errorMessage = get(
         err,
-        'response.payload.message',
+        "response.payload.message",
         formatMessage({ id: `${pluginId}.error.record.delete` })
       );
 
       strapi.notification.toggle({
-        type: 'warning',
+        type: "warning",
         message: errorMessage,
       });
       // Close the modal
@@ -473,7 +510,7 @@ const downloadAsCSV = function(text,opts){
     };
   }, [canRead, getData, slug, params, getDataSucceeded, fetchData]);
 
-  const handleClickDelete = id => {
+  const handleClickDelete = (id) => {
     setIdToDelete(id);
     toggleModalDelete();
   };
@@ -487,9 +524,9 @@ const downloadAsCSV = function(text,opts){
   }, [fetchData, didDeleteData, slug, params]);
 
   const toggleFilterPickerState = useCallback(() => {
-    setFilterPickerState(prevState => {
+    setFilterPickerState((prevState) => {
       if (!prevState) {
-        emitEventRef.current('willFilterEntries');
+        emitEventRef.current("willFilterEntries");
       }
 
       return !prevState;
@@ -505,23 +542,25 @@ const downloadAsCSV = function(text,opts){
       {
         label: formatMessage(
           {
-            id: 'content-manager.containers.List.addAnEntry',
+            id: "content-manager.containers.List.addAnEntry",
           },
           {
-            entity: label || 'Content Manager',
+            entity: label || "Content Manager",
           }
         ),
         onClick: () => {
-          const trackerProperty = hasDraftAndPublish ? { status: 'draft' } : {};
+          const trackerProperty = hasDraftAndPublish ? { status: "draft" } : {};
 
-          emitEventRef.current('willCreateEntry', trackerProperty);
+          emitEventRef.current("willCreateEntry", trackerProperty);
           push({
             pathname: `${pathname}/create`,
-            search: query.plugins ? stringify({ plugins: query.plugins }, { encode: false }) : '',
+            search: query.plugins
+              ? stringify({ plugins: query.plugins }, { encode: false })
+              : "",
           });
         },
-        color: 'primary',
-        type: 'button',
+        color: "primary",
+        type: "button",
         icon: true,
         style: {
           paddingLeft: 15,
@@ -530,13 +569,21 @@ const downloadAsCSV = function(text,opts){
         },
       },
     ];
-  }, [label, pathname, canCreate, formatMessage, hasDraftAndPublish, push, query]);
+  }, [
+    label,
+    pathname,
+    canCreate,
+    formatMessage,
+    hasDraftAndPublish,
+    push,
+    query,
+  ]);
 
   const headerProps = useMemo(() => {
     /* eslint-disable indent */
     return {
       title: {
-        label: label || 'Content Manager',
+        label: label || "Content Manager",
       },
       content: canRead
         ? formatMessage(
@@ -553,12 +600,12 @@ const downloadAsCSV = function(text,opts){
     };
   }, [total, headerAction, label, canRead, formatMessage]);
 
-  const handleToggleModalDeleteAll = e => {
-    emitEventRef.current('willBulkDeleteEntries');
+  const handleToggleModalDeleteAll = (e) => {
+    emitEventRef.current("willBulkDeleteEntries");
     toggleModalDeleteAll(e);
   };
 
-  const handleExportAll = e => {
+  const handleExportAll = (e) => {
     handleExportAllData(e);
   };
 
@@ -591,9 +638,16 @@ const downloadAsCSV = function(text,opts){
           slug={slug}
         />
         <Container className="container-fluid">
-          {!isFilterPickerOpen && <Header {...headerProps} isLoading={isLoading && canRead} />}
+          {!isFilterPickerOpen && (
+            <Header {...headerProps} isLoading={isLoading && canRead} />
+          )}
           {isSearchable && canRead && (
-            <Search changeParams={setQuery} initValue={_q} model={label} value={_q} />
+            <Search
+              changeParams={setQuery}
+              initValue={_q}
+              model={label}
+              value={_q}
+            />
           )}
 
           {!canRead && (
@@ -606,30 +660,38 @@ const downloadAsCSV = function(text,opts){
 
           {canRead && (
             <Wrapper>
-              <div className="row" style={{ marginBottom: '5px' }}>
+              <div className="row" style={{ marginBottom: "5px" }}>
                 <div className="col-9">
-                  <div className="row" style={{ marginLeft: 0, marginRight: 0 }}>
+                  <div
+                    className="row"
+                    style={{ marginLeft: 0, marginRight: 0 }}
+                  >
                     {isFilterable && (
                       <>
-                        <AddFilterCta type="button" onClick={toggleFilterPickerState}>
+                        <AddFilterCta
+                          type="button"
+                          onClick={toggleFilterPickerState}
+                        >
                           <FilterIcon />
                           <FormattedMessage id="app.utils.filters" />
                         </AddFilterCta>
-                        {filters.map(({ filter: filterName, name, value }, key) => (
-                          <Filter
-                            contentType={contentType}
-                            filterName={filterName}
-                            filters={filters}
-                            index={key}
-                            key={key}
-                            metadatas={metadatas}
-                            name={name}
-                            toggleFilterPickerState={toggleFilterPickerState}
-                            isFilterPickerOpen={isFilterPickerOpen}
-                            setQuery={setQuery}
-                            value={value}
-                          />
-                        ))}
+                        {filters.map(
+                          ({ filter: filterName, name, value }, key) => (
+                            <Filter
+                              contentType={contentType}
+                              filterName={filterName}
+                              filters={filters}
+                              index={key}
+                              key={key}
+                              metadatas={metadatas}
+                              name={name}
+                              toggleFilterPickerState={toggleFilterPickerState}
+                              isFilterPickerOpen={isFilterPickerOpen}
+                              setQuery={setQuery}
+                              value={value}
+                            />
+                          )
+                        )}
                       </>
                     )}
                   </div>
@@ -641,7 +703,11 @@ const downloadAsCSV = function(text,opts){
                       <InjectionZone area={`${pluginId}.listView.actions`} />
                     </Padded>
 
-                    <CheckPermissions permissions={pluginPermissions.collectionTypesConfigurations}>
+                    <CheckPermissions
+                      permissions={
+                        pluginPermissions.collectionTypesConfigurations
+                      }
+                    >
                       <FieldPicker
                         displayedHeaders={displayedHeaders}
                         items={allAllowedHeaders}
@@ -653,7 +719,7 @@ const downloadAsCSV = function(text,opts){
                   </Flex>
                 </div>
               </div>
-              <div className="row" style={{ paddingTop: '12px' }}>
+              <div className="row" style={{ paddingTop: "12px" }}>
                 <div className="col-12">
                   <CustomTable
                     data={data}
@@ -676,14 +742,16 @@ const downloadAsCSV = function(text,opts){
           isOpen={showWarningDelete}
           toggleModal={toggleModalDelete}
           content={{
-            message: getTrad('popUpWarning.bodyMessage.contentType.delete'),
+            message: getTrad("popUpWarning.bodyMessage.contentType.delete"),
           }}
           onConfirm={handleConfirmDeleteData}
           popUpWarningType="danger"
           onClosed={handleModalClose}
           isConfirmButtonLoading={showModalConfirmButtonLoading}
         >
-          <InjectionZoneList area={`${pluginId}.listView.deleteModalAdditionalInfos`} />
+          <InjectionZoneList
+            area={`${pluginId}.listView.deleteModalAdditionalInfos`}
+          />
         </PopUpWarning>
         <PopUpWarning
           isOpen={showWarningDeleteAll}
@@ -691,7 +759,7 @@ const downloadAsCSV = function(text,opts){
           content={{
             message: getTrad(
               `popUpWarning.bodyMessage.contentType.delete${
-                entriesToDelete.length > 1 ? '.all' : ''
+                entriesToDelete.length > 1 ? ".all" : ""
               }`
             ),
           }}
@@ -700,7 +768,9 @@ const downloadAsCSV = function(text,opts){
           onClosed={handleModalClose}
           isConfirmButtonLoading={showModalConfirmButtonLoading}
         >
-          <InjectionZoneList area={`${pluginId}.listView.deleteModalAdditionalInfos`} />
+          <InjectionZoneList
+            area={`${pluginId}.listView.deleteModalAdditionalInfos`}
+          />
         </PopUpWarning>
       </ListViewProvider>
     </>
@@ -744,7 +814,8 @@ ListView.propTypes = {
   onDeleteDataSucceeded: PropTypes.func.isRequired,
   onDeleteSeveralDataSucceeded: PropTypes.func.isRequired,
   onResetListHeaders: PropTypes.func.isRequired,
-  pagination: PropTypes.shape({ total: PropTypes.number.isRequired }).isRequired,
+  pagination: PropTypes.shape({ total: PropTypes.number.isRequired })
+    .isRequired,
   setModalLoadingState: PropTypes.func.isRequired,
   showModalConfirmButtonLoading: PropTypes.bool.isRequired,
   showWarningDelete: PropTypes.bool.isRequired,

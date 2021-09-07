@@ -94,6 +94,14 @@
     },
     "reminder_schedule": {
       "type": "integer"
+    },
+    "alarmSound": {
+      "type": "enumeration",
+      "enum": [
+        "AlarmA",
+        "AlarmB"
+      ],
+      "default": "AlarmA"
     }
   }
 }

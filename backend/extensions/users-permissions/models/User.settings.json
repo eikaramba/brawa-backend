@@ -60,16 +60,16 @@
       "plugin": "users-permissions",
       "configurable": false
     },
-    "group": {
-      "via": "users",
-      "model": "group"
-    },
     "alarms": {
       "via": "user",
       "collection": "alarm"
     },
     "fcmToken": {
       "type": "string"
+    },
+    "groups": {
+      "via": "users",
+      "collection": "group"
     }
   }
 }

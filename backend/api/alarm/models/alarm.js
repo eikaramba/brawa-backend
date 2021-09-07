@@ -57,8 +57,8 @@ module.exports = {
                 retries: 2, // gcm, apn
                 encoding: '', // apn
                 badge: 2, // gcm for ios, apn
-                sound: result.template.reminder?'':'alarm2.wav', // gcm, apn with extension
-                android_channel_id: result.template.reminder?'reminder':'alarme', // gcm - Android Channel ID
+                sound: result.template.reminder?'':result.template.alarmSound.toLowerCase()+'.wav', // gcm, apn with extension
+                android_channel_id: result.template.reminder?'reminder':result.template.alarmSound, // gcm - Android Channel ID
                 notificationCount: 0, // fcm for android. badge can be used for both fcm and apn
                 launchImage: '', // apn and gcm for ios
                 action: '', // apn and gcm for ios
