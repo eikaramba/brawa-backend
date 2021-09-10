@@ -38,6 +38,9 @@
     },
     "accelerometerTotal": {
       "type": "float"
+    },
+    "steps": {
+      "type": "integer"
     }
   }
 }
