@@ -60,7 +60,7 @@ const HomePage = ({ history: { push } }) => {
                 {msg => <h2 id="mainHeader">{msg}</h2>}
               </FormattedMessage>
 
-              <p>Willkommen im Admin Bereich des Brawa Projektes. Hier können die Alarme konfiguriert werden, welche die Nutzer erhalten.</p>
+              <p>Willkommen im Admin Bereich des BRAWA Projektes. Hier können die Alarme konfiguriert werden, welche die Nutzer erhalten.</p>
 
               
               <Separator style={{ marginTop: 37, marginBottom: 36 }} />
