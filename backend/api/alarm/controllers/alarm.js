@@ -5,13 +5,29 @@
  * to customize this controller
  */
  const { sanitizeEntity } = require('strapi-utils');
+ const isOwner = require("../../../config/policies/isOwner");
  
+ const ownerPath = "user.id";
  module.exports = {
 
-    // async create(ctx) {
-    //   let entity = await strapi.services.alarm.create(ctx.request.body);
-    //   return sanitizeEntity(entity, { model: strapi.models.alarm });
-    // },
+  async find(ctx) {
+    ctx.query = await isOwner(ctx, ownerPath); //custom code to prevent access
+    let entities;
+    if (ctx.query._q) {
+      entities = await strapi.services.alarm.search(ctx.query);
+    } else {
+      entities = await strapi.services.alarm.find(ctx.query);
+    }
+
+    return entities.map(entity => sanitizeEntity(entity, { model: strapi.models.alarm }));
+  },
+  async findOne(ctx) {
+    const { id } = ctx.params;
+
+    const entity = await strapi.services.alarm.findOne({ id });
+    await isOwner(ctx, ownerPath, entity); //custom code to prevent access
+    return sanitizeEntity(entity, { model: strapi.models.alarm });
+  },
 
     async addModuleResult(ctx) {
       const { id,moduleStep } = ctx.params;
@@ -19,13 +35,22 @@
         const currentEntry = await strapi.query('alarm').findOne({id}, ['moduleResults']);
         //iterate over currentEntry.moduleResults and check if the moduleStep is already in there. If yes, update the result, if not add it
         if(currentEntry.moduleResults) {
-          currentEntry.moduleResults.forEach((entry) => {
+          let foundExisting=false;
+          for (let entry of currentEntry.moduleResults) {
             if(entry.moduleStep === moduleStep) {
+              foundExisting=true;
               entry.results = ctx.request.body.results;
               entry.moduleId = ctx.request.body.moduleId;
               entry.submitted_at = ctx.request.body.submitted_at;
+              break;
             }
-          });
+          };
+          if(!foundExisting){
+            currentEntry.moduleResults = [...currentEntry.moduleResults,{
+              moduleStep,
+              ...ctx.request.body
+            }];
+          }
         }
         else {
           currentEntry.moduleResults = [{
@@ -41,9 +66,11 @@
 
     async update(ctx) {
       const { id } = ctx.params;
+      if(!id) return;
 
       if(ctx.request.body.opened_at) {
         const currentEntry = await strapi.query('alarm').findOne({id}, ['opened_at']);
+        if(!currentEntry) return;
         if(currentEntry.opened_at) delete ctx.request.body.opened_at
       }
   

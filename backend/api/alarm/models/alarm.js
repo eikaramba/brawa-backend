@@ -14,6 +14,9 @@ const settings = {
 const push = new PushNotifications(settings);
 module.exports = {
     lifecycles: {
+        beforeCreate(data) {
+            data.send_at = new Date();
+        },
         async afterCreate(result) {
             const data = {
                 title: result.template.notification_titel??'Mögliches Feuer!', // REQUIRED for Android
@@ -51,11 +54,11 @@ module.exports = {
                 clickAction: '', // gcm for android. In ios, category will be used if not supplied
                 locKey: '', // gcm, apn
                 titleLocKey: '', // gcm, apn
-                retries: 1, // gcm, apn
+                retries: 2, // gcm, apn
                 encoding: '', // apn
                 badge: 2, // gcm for ios, apn
-                sound: 'alarm2.wav', // gcm, apn with extension
-                android_channel_id: 'channelId_01', // gcm - Android Channel ID
+                sound: result.template.reminder?'':result.template.alarmSound.toLowerCase()+'.wav', // gcm, apn with extension
+                android_channel_id: result.template.reminder?'reminder':result.template.alarmSound, // gcm - Android Channel ID
                 notificationCount: 0, // fcm for android. badge can be used for both fcm and apn
                 launchImage: '', // apn and gcm for ios
                 action: '', // apn and gcm for ios
@@ -69,7 +72,6 @@ module.exports = {
                 pushType: 'alert',
             };
           const pushResult = await push.send(result.user.fcmToken, data);
-          console.log(pushResult);
         },
       },
 };

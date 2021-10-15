@@ -26,6 +26,10 @@
         "components.question",
         "components.textfield"
       ]
+    },
+    "isLast": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

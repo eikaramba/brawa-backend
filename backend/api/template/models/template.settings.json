@@ -12,8 +12,18 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "ausgeloest": {
+      "type": "boolean",
+      "default": false,
+      "configurable": false
+    },
+    "ausgeloest_um": {
+      "type": "datetime",
+      "configurable": false
+    },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "ausloesen_um": {
       "type": "datetime"
@@ -64,31 +74,34 @@
         "ampelA",
         "ampelB",
         "prozentual"
-      ]
+      ],
+      "default": "ampelA"
     },
     "randomisierte_module": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": false
     },
     "alarmierte_personen": {
       "type": "integer"
     },
     "gamification_nutzen": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": false
     },
     "nfc_nutzen": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": false
     },
     "reminder_schedule": {
-      "type": "json"
+      "type": "integer"
     },
-    "ausgeloest": {
-      "type": "boolean",
-      "default": false,
-      "configurable": false
-    },
-    "ausgeloest_um": {
-      "type": "datetime",
-      "configurable": false
+    "alarmSound": {
+      "type": "enumeration",
+      "enum": [
+        "AlarmA",
+        "AlarmB"
+      ],
+      "default": "AlarmA"
     }
   }
 }

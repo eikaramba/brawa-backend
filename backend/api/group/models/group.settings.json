@@ -13,9 +13,10 @@
   "pluginOptions": {},
   "attributes": {
     "users": {
-      "via": "group",
+      "via": "groups",
       "plugin": "users-permissions",
-      "collection": "user"
+      "collection": "user",
+      "dominant": true
     },
     "name": {
       "type": "string"
