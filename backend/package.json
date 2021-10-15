@@ -8,7 +8,7 @@
     "dev": "strapi develop",
     "dev-admin": "strapi develop --watch-admin",
     "start": "strapi start",
-    "build": "cross-env NODE_ENV=production ENV_PATH=.env.production strapi build",
+    "build": "cross-env NODE_ENV=production ENV_PATH=.env.production strapi build --clean",
     "build-dev": "strapi build",
     "strapi": "strapi"
   },
