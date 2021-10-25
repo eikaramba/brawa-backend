@@ -20,7 +20,7 @@ module.exports = {
                 qb.where('ausgeloest', false).orWhere('reminder', true);
                 qb.where('ausloesen_um', '<',new Date());
             })
-        .fetchAll({withRelated: ['groups', {'groups.users': qb => qb.columns('id','group','fcmToken')}]})).toJSON();
+        .fetchAll({withRelated: ['groups', {'groups.users': qb => qb.columns('users-permissions_user.id','group_id','fcmToken')}]})).toJSON();
         // console.log(util.inspect(overdueAlarms, {showHidden: false, depth: null}));
 
 

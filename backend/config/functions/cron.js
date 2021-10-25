@@ -14,7 +14,7 @@ module.exports = {
   /**
    * might NOT WORK because of pm2 see https://strapi.io/documentation/developer-docs/latest/guides/scheduled-publication.html#create-a-cron-task
    */
-  // '*/5 * * * *': async () => {
-  //   await strapi.api.template.services.template.checkAlarms();
-  // }
+  '*/1 * * * *': async () => {
+    await strapi.api.template.services.template.checkAlarms();
+  }
 };
