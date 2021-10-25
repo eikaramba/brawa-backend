@@ -10,7 +10,6 @@ const util = require('util')
 module.exports = {
 
     async checkAlarms() {
-        console.log("checking overdue alarms");
         let alarmsCounter=0;
         // const overdueAlarms = await strapi.query('template').find({ausgeloest:false,ausloesen_um_lt: new Date()});
 
