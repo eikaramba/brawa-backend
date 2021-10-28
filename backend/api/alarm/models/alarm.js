@@ -78,7 +78,7 @@ module.exports = {
           push.send(result.user.fcmToken, data)
           .then((results) => { 
               if(results[0]?.failure > 0) {
-                  console.error("failed to send push notification to user", results);
+                  console.error("failed to send push notification to user", JSON.stringify(results));
               }
            })
           .catch((err) => { console.error(err); });
