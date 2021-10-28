@@ -14,12 +14,10 @@
   "attributes": {
     "ausgeloest": {
       "type": "boolean",
-      "default": false,
-      "configurable": false
+      "default": false
     },
     "ausgeloest_um": {
-      "type": "datetime",
-      "configurable": false
+      "type": "datetime"
     },
     "name": {
       "type": "string",
