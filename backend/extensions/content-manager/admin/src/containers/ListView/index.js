@@ -365,6 +365,7 @@ function ListView({
               "send_at",
               "opened_at",
               "confirmed_at",
+              "received_at",
               "accelerometerMaximum",
               "accelerometerTotal",
               "template.id",
