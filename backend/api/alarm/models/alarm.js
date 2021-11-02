@@ -47,7 +47,9 @@ module.exports = {
                         nfc_nutzen: result.template.nfc_nutzen,
                         callToAction_button: result.template.callToAction_button,
                         randomisierte_module: result.template.randomisierte_module,
-                        alarmSound:result.template.alarmSound
+                        alarmSound:result.template.alarmSound,
+                        notification_body: result.template.notification_body??'Achtung Alarm, bitte sofort prüfen!',
+                        notification_titel: result.template.notification_titel??'Mögliches Feuer!'
                     }
                 },
                 icon: 'notification_icon', // gcm for android
