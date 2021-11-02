@@ -13,6 +13,8 @@ module.exports = {
         let alarmsCounter=0;
         // const overdueAlarms = await strapi.query('template').find({ausgeloest:false,ausloesen_um_lt: new Date()});
 
+        console.log("aktuelle uhrzeit",new Date());
+        console.log("aktuelle uhrzeit dayjs",dayjs().toString());
         const overdueAlarms = (await strapi
             .query('template')
             .model.query(qb => {
@@ -20,7 +22,7 @@ module.exports = {
                 qb.where('ausloesen_um', '<',new Date());
             })
         .fetchAll({withRelated: ['groups', {'groups.users': qb => qb.columns('users-permissions_user.id','group_id','fcmToken')}]})).toJSON();
-        // console.log(util.inspect(overdueAlarms, {showHidden: false, depth: null}));
+        console.log(util.inspect(overdueAlarms, {showHidden: false, depth: null}));
 
 
 
@@ -28,7 +30,6 @@ module.exports = {
         for (const alarm of overdueAlarms) {
             for (const group of alarm.groups) {
                 for (const user of group.users) {
-                    console.log(user);
                     if(!user.fcmToken) continue; //do not send notifications to users without fcmToken
                     const params = {
                         template: alarm.id,
