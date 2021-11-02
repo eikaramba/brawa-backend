@@ -20,7 +20,7 @@ module.exports = {
                 qb.whereRaw("published_at IS NOT NULL AND (ausgeloest = false OR reminder=true) AND ausloesen_um <= ?", [dayjs().valueOf()])
             })
         .fetchAll({withRelated: ['groups', {'groups.users': qb => qb.columns('users-permissions_user.id','group_id','fcmToken')}]})).toJSON();
-        console.log(util.inspect(overdueAlarms, {showHidden: false, depth: null}));
+        // console.log(util.inspect(overdueAlarms, {showHidden: false, depth: null}));
 
 
 
