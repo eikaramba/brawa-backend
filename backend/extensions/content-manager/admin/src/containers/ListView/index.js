@@ -64,6 +64,9 @@ const {
   Parser,
   transforms: { unwind, flatten },
 } = require("json2csv");
+var dayjs = require('dayjs')
+var utc = require('dayjs/plugin/utc')
+dayjs.extend(utc)
 
 /* eslint-disable react/no-array-index-key */
 function ListView({
@@ -327,8 +330,9 @@ function ListView({
             method: "GET",
           }
         );
+        const everything = [];
         for (const templateResult of templateResults) {
-          const results = await request(
+          const result = await request(
             `/alarms?id_in=${templateResult.alarms
               .map((a) => a.id)
               .join("&id_in=")}`,
@@ -336,80 +340,105 @@ function ListView({
               method: "GET",
             }
           );
-          if (results.length > 0) {
-            // console.log(results);
+          if (result.length > 0) {
+            // console.log(result);
             // let countMaxResults = 0;
             // results.forEach(result => {
             //   if(result.moduleResults) countMaxResults++;
             // });
 
-            results.forEach((result) => {
-              result.user = result.user.email;
-              delete result.template.callToAction_button;
-              delete result.template.callToAction_text;
-              delete result.template.quittierung_text;
-              delete result.template.notification_body;
-              delete result.template.notification_titel;
-              delete result.template.reminder_schedule;
-              delete result.template.created_at;
-              delete result.template.updated_at;
-              delete result.template.published_at;
+            result.forEach((r) => {
+              r.user = r.user.email;
+              delete r.template.callToAction_button;
+              delete r.template.callToAction_text;
+              delete r.template.quittierung_text;
+              delete r.template.notification_body;
+              delete r.template.notification_titel;
+              delete r.template.reminder_schedule;
+              delete r.template.created_at;
+              delete r.template.updated_at;
+              delete r.template.published_at;
+              if(r.send_at)
+              r.send_at = dayjs(r.send_at).format("YYYY-MM-DD HH:mm:ss").toString();
+              if(r.opened_at)
+              r.opened_at = dayjs(r.opened_at).format("YYYY-MM-DD HH:mm:ss").toString();
+              if(r.confirmed_at)
+              r.confirmed_at = dayjs(r.confirmed_at).format("YYYY-MM-DD HH:mm:ss").toString();
+              if(r.received_at)
+              r.received_at = dayjs(r.received_at).format("YYYY-MM-DD HH:mm:ss").toString();
 
-              // result.moduleResults = result.moduleResults ? JSON.stringify(result.moduleResults) : 'Keine Ergebnisse';
+              if(r.moduleResults) {
+                r.moduleResults.forEach((mr) => {
+                  mr.submitted_at = dayjs(mr.submitted_at).format("YYYY-MM-DD HH:mm:ss").toString();
+                })
+              }
+              if(r.template.ausloesen_um)
+              r.template.ausloesen_um = dayjs(r.template.ausloesen_um).format("YYYY-MM-DD HH:mm:ss").toString();
+              if(r.template.ausgeloest_um)
+              r.template.ausgeloest_um = dayjs(r.template.ausgeloest_um).format("YYYY-MM-DD HH:mm:ss").toString();
+
+              // r.moduleResults = r.moduleResults ? JSON.stringify(r.moduleResults) : 'Keine Ergebnisse';
+
+              //TODO: wenn denormalisierung nicht erwünscht ist
+              // kein unwind machen, sondern hier manuell die moduleResults als neue Spalten hinzufügen
             });
-
+            everything.push(...result);
             // exportAsCSV(results,{filename:templateResult.name+'.csv'});
-            const fields = [
-              { label: "alarm.id", value: "id" },
-              "user",
-              "send_at",
-              "opened_at",
-              "confirmed_at",
-              "received_at",
-              "accelerometerMaximum",
-              "accelerometerTotal",
-              "template.id",
-              "template.ausloesen_um",
-              "template.ausgeloest",
-              "template.ausgeloest_um",
-              "template.fehlalarm",
-              "template.brandwahrscheinlichkeit",
-              "template.layout",
-              "template.randomisierte_module",
-              "template.alarmierte_personen",
-              "template.gamification_nutzen",
-              "template.nfc_nutzen",
-              { label: "module.step", value: "moduleResults.moduleStep" },
-              { label: "module.id", value: "moduleResults.moduleId" },
-              {
-                label: "module.submitted_at",
-                value: "moduleResults.submitted_at",
-              },
-              {
-                label: "moduleResult.label",
-                value: "moduleResults.results.label",
-              },
-              {
-                label: "moduleResult.answer",
-                value: "moduleResults.results.answer",
-              },
-            ];
-            const transforms = [
-              unwind({ paths: ["moduleResults", "moduleResults.results"] }),
-            ];
-            // const fields = ['id', 'send_at', 'opened_at','template.id','moduleResults.moduleStep','moduleResults.results'];
-            // const transforms = [unwind({ paths: ['moduleResults'] })];
-            const json2csvParser = new Parser({
-              delimiter: ";",
-              quote: "",
-              fields,
-              transforms,
-            });
-            const csv = json2csvParser.parse(results);
-
-            downloadAsCSV(csv, { filename: templateResult.name + ".csv" });
           }
         }
+          const fields = [
+            { label: "alarm.id", value: "id" },
+            "user",
+            "send_at",
+            "opened_at",
+            "confirmed_at",
+            "received_at",
+            "accelerometerMaximum",
+            "accelerometerTotal",
+            "template.id",
+            "template.ausloesen_um",
+            "template.ausgeloest",
+            "template.ausgeloest_um",
+            "template.fehlalarm",
+            "template.brandwahrscheinlichkeit",
+            "template.layout",
+            "template.randomisierte_module",
+            "template.alarmierte_personen",
+            "template.gamification_nutzen",
+            "template.nfc_nutzen",
+            { label: "module.step", value: "moduleResults.moduleStep" },
+            { label: "module.id", value: "moduleResults.moduleId" },
+            {
+              label: "module.submitted_at",
+              value: "moduleResults.submitted_at",
+            },
+            {
+              label: "moduleResult.label",
+              value: "moduleResults.results.label",
+            },
+            {
+              label: "moduleResult.answer",
+              value: "moduleResults.results.answer",
+            },
+          ];
+          const transforms = [
+            unwind({ paths: ["moduleResults", "moduleResults.results"] }),
+          ];
+          // const fields = ['id', 'send_at', 'opened_at','template.id','moduleResults.moduleStep','moduleResults.results'];
+          // const transforms = [unwind({ paths: ['moduleResults'] })];
+          const json2csvParser = new Parser({
+            delimiter: ";",
+            quote: "",
+            fields,
+            transforms,
+          });
+          console.log(everything);
+          const csv = json2csvParser.parse(everything);
+
+          if(templateResults.length > 1)
+          downloadAsCSV(csv, { filename: "export.csv" });
+          else
+          downloadAsCSV(csv, { filename: templateResults[0].name+".csv" });
       }
     } catch (err) {
       strapi.notification.error(err.toString());
