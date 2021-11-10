@@ -389,7 +389,10 @@ function ListView({
           const fields = [
             { label: "alarm.id", value: "id" },
             "user",
-            "send_at",
+            {
+              label: "sent_at",
+              value: "send_at",
+            },
             "opened_at",
             "confirmed_at",
             "received_at",
