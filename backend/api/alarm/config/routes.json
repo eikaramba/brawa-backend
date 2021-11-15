@@ -33,6 +33,14 @@
       }
     },
     {
+      "method": "POST",
+      "path": "/alarms/test",
+      "handler": "alarm.createTestAlarm",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "PUT",
       "path": "/alarms/:id",
       "handler": "alarm.update",
