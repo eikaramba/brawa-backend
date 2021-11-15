@@ -10,6 +10,16 @@
  const ownerPath = "user.id";
  module.exports = {
 
+  async createTestAlarm(ctx) {
+    setTimeout(async () => {
+      const { id } = await strapi.plugins[
+        "users-permissions"
+      ].services.jwt.getToken(ctx);
+    let entity = await strapi.services.alarm.create({user:id,template:1});
+    }, 10000);
+    return true;
+  },
+
   async find(ctx) {
     ctx.query = await isOwner(ctx, ownerPath); //custom code to prevent access
     let entities;

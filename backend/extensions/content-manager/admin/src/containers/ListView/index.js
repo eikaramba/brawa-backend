@@ -368,9 +368,23 @@ function ListView({
               r.received_at = dayjs(r.received_at).format("YYYY-MM-DD HH:mm:ss").toString();
 
               if(r.moduleResults) {
-                r.moduleResults.forEach((mr) => {
-                  mr.submitted_at = dayjs(mr.submitted_at).format("YYYY-MM-DD HH:mm:ss").toString();
+                //sort moduleResults by module_step and calculate difference between each submitted_at
+                r.moduleResults.sort((a,b) => {
+                  if(a.module_step > b.module_step) return 1;
+                  if(a.module_step < b.module_step) return -1;
+                  return 0;
                 })
+                r.moduleResults.forEach((mr,i) => {
+                  if(i == 0) {
+                    mr.time_spend = dayjs(mr.submitted_at).diff(dayjs(r.confirmed_at), 'seconds',true);
+                  } else {
+                    mr.time_spend = dayjs(mr.submitted_at).diff(dayjs(r.moduleResults[i-1].submitted_at), 'seconds',true);
+                  }
+                })
+
+                // r.moduleResults.forEach((mr) => {
+                //   mr.submitted_at = dayjs(mr.submitted_at).format("YYYY-MM-DD HH:mm:ss").toString();
+                // })
               }
               if(r.template.ausloesen_um)
               r.template.ausloesen_um = dayjs(r.template.ausloesen_um).format("YYYY-MM-DD HH:mm:ss").toString();
@@ -412,8 +426,12 @@ function ListView({
             { label: "module.step", value: "moduleResults.moduleStep" },
             { label: "module.id", value: "moduleResults.moduleId" },
             {
-              label: "module.submitted_at",
+              label: "moduleResults.submitted_at",
               value: "moduleResults.submitted_at",
+            },
+            {
+              label: "moduleResults.time_spend",
+              value: "moduleResults.time_spend",
             },
             {
               label: "moduleResult.label",
