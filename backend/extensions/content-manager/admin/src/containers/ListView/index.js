@@ -348,7 +348,7 @@ function ListView({
             // });
 
             result.forEach((r) => {
-              r.user = r.user.email;
+              r.user = r.user.id;
               delete r.template.callToAction_button;
               delete r.template.callToAction_text;
               delete r.template.quittierung_text;
