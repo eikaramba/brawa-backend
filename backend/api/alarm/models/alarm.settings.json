@@ -44,6 +44,9 @@
     },
     "received_at": {
       "type": "datetime"
+    },
+    "pageTwoFinished_at": {
+      "type": "datetime"
     }
   }
 }

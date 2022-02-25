@@ -348,7 +348,7 @@ function ListView({
             // });
 
             result.forEach((r) => {
-              r.user = r.user.id;
+              r.user = r.user.email;
               delete r.template.callToAction_button;
               delete r.template.callToAction_text;
               delete r.template.quittierung_text;
@@ -359,13 +359,15 @@ function ListView({
               delete r.template.updated_at;
               delete r.template.published_at;
               if(r.send_at)
-              r.send_at = dayjs(r.send_at).format("YYYY-MM-DD HH:mm:ss").toString();
+              r.send_at = dayjs(r.send_at).format("YYYY-MM-DD HH:mm:ss.SSS").toString();
               if(r.opened_at)
-              r.opened_at = dayjs(r.opened_at).format("YYYY-MM-DD HH:mm:ss").toString();
+              r.opened_at = dayjs(r.opened_at).format("YYYY-MM-DD HH:mm:ss.SSS").toString();
               if(r.confirmed_at)
-              r.confirmed_at = dayjs(r.confirmed_at).format("YYYY-MM-DD HH:mm:ss").toString();
+              r.confirmed_at = dayjs(r.confirmed_at).format("YYYY-MM-DD HH:mm:ss.SSS").toString();
               if(r.received_at)
-              r.received_at = dayjs(r.received_at).format("YYYY-MM-DD HH:mm:ss").toString();
+              r.received_at = dayjs(r.received_at).format("YYYY-MM-DD HH:mm:ss.SSS").toString();
+              if(r.pageTwoFinished_at)
+              r.pageTwoFinished_at = dayjs(r.pageTwoFinished_at).format("YYYY-MM-DD HH:mm:ss.SSS").toString();
 
               if(r.moduleResults) {
                 //sort moduleResults by module_step and calculate difference between each submitted_at
@@ -376,20 +378,22 @@ function ListView({
                 })
                 r.moduleResults.forEach((mr,i) => {
                   if(i == 0) {
-                    mr.time_spend = dayjs(mr.submitted_at).diff(dayjs(r.confirmed_at), 'seconds',true);
+                    mr.time_spent = dayjs(mr.submitted_at).diff(dayjs(r.pageTwoFinished_at), 'milliseconds',true);
                   } else {
-                    mr.time_spend = dayjs(mr.submitted_at).diff(dayjs(r.moduleResults[i-1].submitted_at), 'seconds',true);
+                    mr.time_spent = dayjs(mr.submitted_at).diff(dayjs(r.moduleResults[i-1].submitted_at), 'milliseconds',true);
                   }
+                  mr.submitted_at = dayjs(mr.submitted_at).format("YYYY-MM-DD HH:mm:ss.SSS").toString();
                 })
 
                 // r.moduleResults.forEach((mr) => {
                 //   mr.submitted_at = dayjs(mr.submitted_at).format("YYYY-MM-DD HH:mm:ss").toString();
                 // })
+                r.time_spent_total = dayjs(r.moduleResults[r.moduleResults.length-1].submitted_at).diff(dayjs(r.opened_at), 'milliseconds',true);
               }
               if(r.template.ausloesen_um)
-              r.template.ausloesen_um = dayjs(r.template.ausloesen_um).format("YYYY-MM-DD HH:mm:ss").toString();
+              r.template.ausloesen_um = dayjs(r.template.ausloesen_um).format("YYYY-MM-DD HH:mm:ss.SSS").toString();
               if(r.template.ausgeloest_um)
-              r.template.ausgeloest_um = dayjs(r.template.ausgeloest_um).format("YYYY-MM-DD HH:mm:ss").toString();
+              r.template.ausgeloest_um = dayjs(r.template.ausgeloest_um).format("YYYY-MM-DD HH:mm:ss.SSS").toString();
 
               // r.moduleResults = r.moduleResults ? JSON.stringify(r.moduleResults) : 'Keine Ergebnisse';
 
@@ -407,12 +411,16 @@ function ListView({
               label: "sent_at",
               value: "send_at",
             },
+            "received_at",
             "opened_at",
             "confirmed_at",
-            "received_at",
+            "pageTwoFinished_at",
+            "time_spent_total",
             "accelerometerMaximum",
             "accelerometerTotal",
+            "steps",
             "template.id",
+            "template.name",
             "template.ausloesen_um",
             "template.ausgeloest",
             "template.ausgeloest_um",
@@ -430,8 +438,8 @@ function ListView({
               value: "moduleResults.submitted_at",
             },
             {
-              label: "moduleResults.time_spend",
-              value: "moduleResults.time_spend",
+              label: "moduleResults.time_spent",
+              value: "moduleResults.time_spent",
             },
             {
               label: "moduleResult.label",
