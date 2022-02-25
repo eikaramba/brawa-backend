@@ -41,7 +41,6 @@
 
     async addModuleResult(ctx) {
       const { id,moduleStep } = ctx.params;
-      if(ctx.request.body.results) {
         const currentEntry = await strapi.query('alarm').findOne({id}, ['moduleResults']);
         //iterate over currentEntry.moduleResults and check if the moduleStep is already in there. If yes, update the result, if not add it
         if(currentEntry.moduleResults) {
@@ -49,7 +48,7 @@
           for (let entry of currentEntry.moduleResults) {
             if(entry.moduleStep === moduleStep) {
               foundExisting=true;
-              entry.results = ctx.request.body.results;
+              if(ctx.request.body.results) entry.results = ctx.request.body.results;
               entry.moduleId = ctx.request.body.moduleId;
               entry.submitted_at = ctx.request.body.submitted_at;
               break;
@@ -70,7 +69,6 @@
         }
         await strapi.query('alarm').update({id}, currentEntry);
         
-      }
       return {}
     },
 
