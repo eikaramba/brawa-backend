@@ -70,8 +70,7 @@
       "type": "enumeration",
       "enum": [
         "ampelA",
-        "ampelB",
-        "prozentual"
+        "ampelB"
       ],
       "default": "ampelA"
     },
@@ -97,7 +96,8 @@
       "type": "enumeration",
       "enum": [
         "AlarmA",
-        "AlarmB"
+        "AlarmB",
+        "AlarmC"
       ],
       "default": "AlarmA"
     }
