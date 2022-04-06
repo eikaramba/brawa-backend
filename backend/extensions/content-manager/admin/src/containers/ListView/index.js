@@ -332,14 +332,28 @@ function ListView({
         );
         const everything = [];
         for (const templateResult of templateResults) {
-          const result = await request(
-            `/alarms?id_in=${templateResult.alarms
+
+
+          let entriesToDeleteSplit = [];
+          for (let i = 0; i < templateResult.alarms.length; i += 100) {
+            entriesToDeleteSplit.push(templateResult.alarms.slice(i, i + 100));
+          }
+          let result = [];
+          for (const split of entriesToDeleteSplit) {
+             const resultrequest= await request(
+              `/alarms?id_in=${split
               .map((a) => a.id)
               .join("&id_in=")}`,
             {
               method: "GET",
             }
-          );
+            );
+            result = [...result, ...resultrequest];
+          }
+
+
+
+
           if (result.length > 0) {
             // console.log(result);
             // let countMaxResults = 0;
@@ -463,7 +477,7 @@ function ListView({
             fields,
             transforms,
           });
-          console.log(everything);
+          // console.log("everything", everything);
           const csv = json2csvParser.parse(everything);
 
           if(templateResults.length > 1)
