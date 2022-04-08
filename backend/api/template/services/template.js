@@ -43,7 +43,10 @@ module.exports = {
             };
 
             if(alarm.reminder) {
-                update.ausloesen_um = dayjs().add(alarm.reminder_schedule, 'day').toDate()
+                if(alarm.reminder_schedule)
+                    update.ausloesen_um = dayjs().add(alarm.reminder_schedule, 'day').toDate()
+                else
+                    update.ausloesen_um = "";
             }
             await strapi.query('template').update({ id: alarm.id }, update );
         }
