@@ -362,8 +362,9 @@ function ListView({
             // });
 
             result.forEach((r) => {
-              r.userEmail = r.user.email;
               r.userId = r.user.id;
+              r.userEmail = r.user.email;
+              r.gruppe = r.user.group;
               delete r.template.callToAction_button;
               delete r.template.callToAction_text;
               delete r.template.quittierung_text;
@@ -423,6 +424,7 @@ function ListView({
             { label: "alarm.id", value: "id" },
             "userId",
             "userEmail",
+            "gruppe",
             {
               label: "sent_at",
               value: "send_at",
