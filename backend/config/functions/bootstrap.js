@@ -12,9 +12,11 @@
 
 /**
  *
-SELECT json_agg(json_build_object('email', email, 'group', '2')) FROM public.users
-WHERE email is not null
-LIMIT 100
+SELECT json_agg(json_build_object('email', email, 'group', '2')) FROM public.participations
+left join public.users on participations."userId" = users.id
+WHERE participations.uuid in (
+  ...
+)
 
 then copy straight from data output the row to /repo/import.json
  */
