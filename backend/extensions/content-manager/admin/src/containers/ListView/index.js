@@ -361,10 +361,16 @@ function ListView({
             //   if(result.moduleResults) countMaxResults++;
             // });
 
-            result.forEach((r) => {
+            for (const r of result) {
               r.userId = r.user.id;
               r.userEmail = r.user.email;
-              r.gruppe = r.user.group;
+              const grouprequest= await request(
+                `/users?email=${r.user.email}`,
+              {
+                method: "GET",
+              }
+              );
+              r.gruppen = JSON.stringify(grouprequest[0].groups.map(g => g.id));
               delete r.template.callToAction_button;
               delete r.template.callToAction_text;
               delete r.template.quittierung_text;
@@ -415,7 +421,7 @@ function ListView({
 
               //TODO: wenn denormalisierung nicht erwünscht ist
               // kein unwind machen, sondern hier manuell die moduleResults als neue Spalten hinzufügen
-            });
+            };
             everything.push(...result);
             // exportAsCSV(results,{filename:templateResult.name+'.csv'});
           }
@@ -424,7 +430,7 @@ function ListView({
             { label: "alarm.id", value: "id" },
             "userId",
             "userEmail",
-            "gruppe",
+            "gruppen",
             {
               label: "sent_at",
               value: "send_at",
