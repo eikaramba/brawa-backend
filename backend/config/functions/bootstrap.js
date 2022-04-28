@@ -53,6 +53,16 @@ module.exports = async () => {
                     }
               }
             await strapi.plugins["users-permissions"].services.user.add(obj);
+          }else{
+            if(user.group){
+              //if group is of type array
+              if(Array.isArray(user.group)){
+                existing[0].groups = [...existing[0].groups,...user.group];
+              }else{
+                existing[0].groups = [...existing[0].groups,user.group];
+              }
+              await strapi.query('user', 'users-permissions').update({id:existing[0].id}, existing[0]);
+            }
           }
         } catch (err) {
           console.error("error creating user", err);
