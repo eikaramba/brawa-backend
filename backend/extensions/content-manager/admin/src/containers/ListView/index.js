@@ -362,16 +362,20 @@ function ListView({
             // });
 
             for (const r of result) {
-              if(!r.user) r.user={};
-              r.userId = r.user.id;
-              r.userEmail = r.user.email;
-              const grouprequest= await request(
-                `/users?email=${r.user.email}`,
-              {
-                method: "GET",
+              if(!r.user) {
+                r.userId="";
+                r.userEmail="";
+              }else{
+                r.userId = r.user.id;
+                r.userEmail = r.user.email;
+                const grouprequest= await request(
+                  `/users?email=${r.user.email}`,
+                {
+                  method: "GET",
+                }
+                );
+                r.gruppen = JSON.stringify(grouprequest[0].groups.map(g => g.id));
               }
-              );
-              r.gruppen = JSON.stringify(grouprequest[0].groups.map(g => g.id));
               delete r.template.callToAction_button;
               delete r.template.callToAction_text;
               delete r.template.quittierung_text;
