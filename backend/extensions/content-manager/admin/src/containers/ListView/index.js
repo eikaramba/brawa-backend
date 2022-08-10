@@ -362,6 +362,7 @@ function ListView({
             // });
 
             for (const r of result) {
+              if(!r.user) r.user={};
               r.userId = r.user.id;
               r.userEmail = r.user.email;
               const grouprequest= await request(
