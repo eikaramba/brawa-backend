@@ -45,7 +45,7 @@ RUN cp -a /tmp/node_modules /strapi/
 # "layer" thats been cached will be used if possible
 COPY . /strapi
 
-RUN sudo chown -R node:node /strapi
+RUN chown -R node:node /strapi
 
 # STEP 4 ---- Switch User and set environment
 USER node
