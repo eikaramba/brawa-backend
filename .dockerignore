@@ -1,0 +1,5 @@
+backend/node_modules
+backend/npm-debug.log
+backend/.eslintignore
+backend/.eslintrc
+backend/package-lock.json
