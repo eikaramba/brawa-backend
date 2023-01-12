@@ -73,6 +73,9 @@ VOLUME \
   /strapi/.tmp \
   /strapi/public/uploads
 
+RUN chown -R node:node /strapi/.tmp
+RUN chown -R node:node /strapi/public/uploads
+
 # STEP 6 ---- Start strapi
 
 EXPOSE 1338
