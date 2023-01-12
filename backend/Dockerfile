@@ -33,9 +33,9 @@ RUN echo "update-notifier=false" >> ~/.npmrc
 
 # use changes to package.json to force Docker not to use the cache
 # when we change our application's nodejs dependencies see http://bitjudo.com/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/ for reference
-COPY /backend/package.json /tmp/package.json
+COPY /package.json /tmp/package.json
 RUN cd /tmp && npm install --only=production --no-package-lock
-RUN cp -a /tmp/node_modules /strapi/backend
+RUN cp -a /tmp/node_modules /strapi/
 
 
 
@@ -44,11 +44,10 @@ RUN cp -a /tmp/node_modules /strapi/backend
 # From here we load our application's code in, therefore the previous docker
 # "layer" thats been cached will be used if possible
 COPY . /strapi
-RUN chown node:node /strapi/backend
 
 # STEP 4 ---- Switch User and set environment
 USER node
-WORKDIR /strapi/backend
+WORKDIR /strapi
 
 
 # Default environment variables
@@ -69,8 +68,8 @@ RUN \
 
 # Expose data directories as volumes
 VOLUME \
-  /strapi/backend/.tmp \
-  /strapi/backend/public/uploads
+  /strapi/.tmp \
+  /strapi/public/uploads
 
 # STEP 6 ---- Start strapi
 
