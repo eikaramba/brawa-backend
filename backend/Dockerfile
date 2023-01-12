@@ -22,7 +22,7 @@ RUN \
   tzdata \
   # Create directory for Directus with corresponding ownership
   # (can be omitted on newer Docker versions since WORKDIR below will do the same)
-  && mkdir /strapi && chown node:node /strapi
+  && mkdir /strapi
 
 
 
@@ -45,10 +45,7 @@ RUN cp -a /tmp/node_modules /strapi/
 # "layer" thats been cached will be used if possible
 COPY . /strapi
 
-RUN chown -R node:node /strapi
-
 # STEP 4 ---- Switch User and set environment
-USER node
 WORKDIR /strapi
 
 
@@ -72,9 +69,6 @@ RUN \
 VOLUME \
   /strapi/.tmp \
   /strapi/public/uploads
-
-RUN chown -R node:node /strapi/.tmp
-RUN chown -R node:node /strapi/public/uploads
 
 # STEP 6 ---- Start strapi
 
