@@ -73,4 +73,5 @@ VOLUME \
 # STEP 6 ---- Start strapi
 
 EXPOSE 1338
+CMD npm run build
 CMD npm run start
