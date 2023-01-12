@@ -71,9 +71,8 @@ VOLUME \
   /strapi/public/uploads
 
 
-RUN npm run build
 
 # STEP 6 ---- Start strapi
 
 EXPOSE 1338
-CMD npm run start
+CMD npm run build && npm run start
