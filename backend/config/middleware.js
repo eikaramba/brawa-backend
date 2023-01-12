@@ -2,7 +2,7 @@ module.exports = {
   settings: {
     cors: {
       enabled: true,
-      origin: ['http://localhost:3000', 'http://localhost:1337','http://localhost:8000','https://app.eikaramba.de'],
+      origin: ['http://localhost:3000', 'http://localhost:1337','http://localhost:8000','https://app.eikaramba.de','https://brawa-backend.at.projects.creatness.studio'],
       "expose": [
         "WWW-Authenticate",
         "Server-Authorization",
