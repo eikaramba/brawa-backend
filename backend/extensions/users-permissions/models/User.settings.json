@@ -67,6 +67,9 @@
     "fcmToken": {
       "type": "string"
     },
+    "points": {
+      "type": "integer"
+    },
     "groups": {
       "via": "users",
       "collection": "group"
