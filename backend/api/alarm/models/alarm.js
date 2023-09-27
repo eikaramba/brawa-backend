@@ -18,6 +18,9 @@ module.exports = {
             data.send_at = new Date();
         },
         async afterCreate(result) {
+            if(!result.template.alarmSound){
+                result.template.alarmSound="alarmc";
+            }
             if(!result.user || !result.user.fcmToken) {
                 console.error("alarm was created, but no FCM Token for user was available");
                 return;
