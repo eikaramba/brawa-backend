@@ -368,6 +368,7 @@ function ListView({
               }else{
                 r.userId = r.user.id;
                 r.userEmail = r.user.email;
+                r.userPoints = r.user.points || 0;
                 const grouprequest= await request(
                   `/users?email=${r.user.email}`,
                 {
@@ -435,6 +436,7 @@ function ListView({
             { label: "alarm.id", value: "id" },
             "userId",
             "userEmail",
+            "userPoints",
             "gruppen",
             {
               label: "sent_at",

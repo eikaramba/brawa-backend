@@ -22,7 +22,7 @@ then copy straight from data output the row to /repo/import.json
  */
 module.exports = async () => {
   try {
-    var json = require("fs").readFileSync("./import.json", "utf8");
+    var json = require("fs").readFileSync("./public/uploads/import.json", "utf8");
     // if file exists
     if (json) {
       console.log("creating users from import.json");

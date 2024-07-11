@@ -22,7 +22,7 @@ RUN \
   tzdata \
   # Create directory for Directus with corresponding ownership
   # (can be omitted on newer Docker versions since WORKDIR below will do the same)
-  && mkdir /strapi && chown node:node /strapi
+  && mkdir /strapi
 
 
 
@@ -46,7 +46,6 @@ RUN cp -a /tmp/node_modules /strapi/
 COPY . /strapi
 
 # STEP 4 ---- Switch User and set environment
-USER node
 WORKDIR /strapi
 
 
@@ -71,7 +70,9 @@ VOLUME \
   /strapi/.tmp \
   /strapi/public/uploads
 
+
+
 # STEP 6 ---- Start strapi
 
 EXPOSE 1338
-CMD npm run start
+CMD npm run build && npm run start
