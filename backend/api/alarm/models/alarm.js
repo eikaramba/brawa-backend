@@ -6,10 +6,14 @@
  */
 
 const PushNotifications = require("node-pushnotifications");
+const firebaseConfig = require('./../../../firebase.json');
+
 const settings = {
-    gcm: {
-        id: process.env["FCM_SECRET"],
-    },
+	fcm: {
+		appName: "brawa",
+		serviceAccountKey: firebaseConfig, 
+		credential: null,
+	},
 };
 const push = new PushNotifications(settings);
 module.exports = {
@@ -18,77 +22,67 @@ module.exports = {
             data.send_at = new Date();
         },
         async afterCreate(result) {
-            if(!result.template.alarmSound){
-                result.template.alarmSound="alarmc";
-            }
-            if(!result.user || !result.user.fcmToken) {
-                console.error("alarm was created, but no FCM Token for user was available");
-                return;
-            }
-            const data = {
-                title: result.template.notification_titel??'Mögliches Feuer!', // REQUIRED for Android
-                topic: 'all', // REQUIRED for iOS (apn and gcm)
-                /* The topic of the notification. When using token-based authentication, specify the bundle ID of the app.
-                 * When using certificate-based authentication, the topic is usually your app's bundle ID.
-                 * More details can be found under https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/sending_notification_requests_to_apns
-                 */
-                body: result.template.notification_body??'Achtung Alarm, bitte sofort prüfen!',
-                priority: 'high',
-                custom: {
-                    id:result.id,
-                    template: {
-                        id: result.template.id,
-                        fehlalarm: result.template.fehlalarm,
-                        reminder: result.template.reminder,
-                        layout: result.template.layout,
-                        reminder: result.template.reminder,
-                        callToAction_text: result.template.callToAction_text,
-                        quittierung_text: result.template.quittierung_text,
-                        brandwahrscheinlichkeit: result.template.brandwahrscheinlichkeit,
-                        alarmierte_personen: result.template.alarmierte_personen,
-                        gamification_nutzen: result.template.gamification_nutzen,
-                        nfc_nutzen: result.template.nfc_nutzen,
-                        callToAction_button: result.template.callToAction_button,
-                        randomisierte_module: result.template.randomisierte_module,
-                        alarmSound:result.template.alarmSound,
-                        notification_body: result.template.notification_body??'Achtung Alarm, bitte sofort prüfen!',
-                        notification_titel: result.template.notification_titel??'Mögliches Feuer!'
+			try {
+                if(!result.template.alarmSound){
+                    result.template.alarmSound="alarmc";
+                }
+                if(!result.user || !result.user.fcmToken) {
+                    console.error("alarm was created, but no FCM Token for user was available");
+                    return;
+                }
+                const data = {
+                    title: result.template.notification_titel??'Mögliches Feuer!',
+                    topic: 'all',
+                    body: result.template.notification_body??'Achtung Alarm, bitte sofort prüfen!',
+                    priority: 'high',
+                    custom: {
+                        id:result.id,
+                        template: {
+                            id: result.template.id,
+                            fehlalarm: result.template.fehlalarm,
+                            reminder: result.template.reminder,
+                            layout: result.template.layout,
+                            reminder: result.template.reminder,
+                            callToAction_text: result.template.callToAction_text,
+                            quittierung_text: result.template.quittierung_text,
+                            brandwahrscheinlichkeit: result.template.brandwahrscheinlichkeit,
+                            alarmierte_personen: result.template.alarmierte_personen,
+                            gamification_nutzen: result.template.gamification_nutzen,
+                            nfc_nutzen: result.template.nfc_nutzen,
+                            callToAction_button: result.template.callToAction_button,
+                            randomisierte_module: result.template.randomisierte_module,
+                            alarmSound:result.template.alarmSound,
+                            notification_body: result.template.notification_body??'Achtung Alarm, bitte sofort prüfen!',
+                            notification_titel: result.template.notification_titel??'Mögliches Feuer!'
+                        }
+                    },
+                    fcm_notification: {
+                        title: result.template.notification_titel??'Mögliches Feuer!',
+                        body: result.template.notification_body??'Achtung Alarm, bitte sofort prüfen!',
+                        channel_id: result.template.reminder?'reminder':result.template.alarmSound, // gcm - Android Channel ID
+                        sound: result.template.reminder?'':result.template.alarmSound.toLowerCase()+'.wav',
+                    },
+                    icon: 'notification_icon',
+                    sound: result.template.reminder?'':result.template.alarmSound.toLowerCase()+'.wav',
+                    category: 'alarm', // apn and gcm for ios
+                    truncateAtWordEnd: true, // apn and gcm for ios
+                    mutableContent: 0, // apn
+                    pushType: 'alert',
+                };
+                const pushResult = await push.send(result.user.fcmToken, data);
+
+                if (pushResult[0].failure > 0){
+                    console.error("error on push", JSON.stringify(pushResult));
+
+                    if(pushResult[0].message[0].errorMsg == "NotRegistered" || pushResult[0].message[0].errorMsg == "Requested entity was not found."){
+                        console.error("FCM Token not registered anymore, deleting fcmtoken for user: ", result.user.id);
+                        result.user.fcmToken = null;
+                        await strapi.query('user', 'users-permissions').update({id:result.user.id}, result.user);
                     }
-                },
-                icon: 'notification_icon', // gcm for android
-                image: '', // gcm for android
-                silent:true,
-                style: '', // gcm for android
-                picture: '', // gcm for android
-                tag: '', // gcm for android
-                color: '', // gcm for android
-                clickAction: '', // gcm for android. In ios, category will be used if not supplied
-                locKey: '', // gcm, apn
-                titleLocKey: '', // gcm, apn
-                retries: 2, // gcm, apn
-                encoding: '', // apn
-                badge: 2, // gcm for ios, apn
-                sound: result.template.reminder?'':result.template.alarmSound.toLowerCase()+'.wav', // gcm, apn with extension
-                android_channel_id: result.template.reminder?'reminder':result.template.alarmSound, // gcm - Android Channel ID
-                notificationCount: 0, // fcm for android. badge can be used for both fcm and apn
-                launchImage: '', // apn and gcm for ios
-                action: '', // apn and gcm for ios
-                category: 'alarm', // apn and gcm for ios
-                // mdm: '', // apn and gcm for ios. Use this to send Mobile Device Management commands.
-                // https://developer.apple.com/library/content/documentation/Miscellaneous/Reference/MobileDeviceManagementProtocolRef/3-MDM_Protocol/MDM_Protocol.html
-                urlArgs: '', // apn and gcm for ios
-                truncateAtWordEnd: true, // apn and gcm for ios
-                mutableContent: 0, // apn
-                threadId: '', // apn
-                pushType: 'alert',
-            };
-          push.send(result.user.fcmToken, data)
-          .then((results) => { 
-              if(results[0]?.failure > 0) {
-                  console.error("failed to send push notification to user", JSON.stringify(results));
-              }
-           })
-          .catch((err) => { console.error(err); });
+                }
+            } catch (err) {
+                console.error("error on push", err);
+            }
           
         },
       },

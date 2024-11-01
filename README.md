@@ -4,8 +4,9 @@ This Repo is the Backend Source Code for the BRAWA App. To run it you will need 
 # see .env for basic variables
 ADMIN_JWT_SECRET
 JWT_SECRET=
-FCM_SECRET=
 ```
+
+Also you will need to generate the FCM private key from Firebase and put it as a firebase.json file into the /backend folder. See https://firebase.google.com/docs/admin/setup?hl=de#initialize_the_sdk_in_non-google_environments
 
 It uses Strapi as a Backend
 
