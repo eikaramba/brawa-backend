@@ -118,3 +118,5 @@ package-lock.json
 .env
 .env.*
 import*.json
+
+firebase.json

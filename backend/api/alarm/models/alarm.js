@@ -10,7 +10,7 @@ const firebaseConfig = require('./../../../firebase.json');
 
 const settings = {
 	fcm: {
-		appName: "notificat",
+		appName: "brawa",
 		serviceAccountKey: firebaseConfig, 
 		credential: null,
 	},
@@ -31,12 +31,8 @@ module.exports = {
                     return;
                 }
                 const data = {
-                    title: result.template.notification_titel??'Mögliches Feuer!', // REQUIRED for Android
-                    topic: 'all', // REQUIRED for iOS (apn and gcm)
-                    /* The topic of the notification. When using token-based authentication, specify the bundle ID of the app.
-                    * When using certificate-based authentication, the topic is usually your app's bundle ID.
-                    * More details can be found under https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/sending_notification_requests_to_apns
-                    */
+                    title: result.template.notification_titel??'Mögliches Feuer!',
+                    topic: 'all',
                     body: result.template.notification_body??'Achtung Alarm, bitte sofort prüfen!',
                     priority: 'high',
                     custom: {
@@ -60,27 +56,32 @@ module.exports = {
                             notification_titel: result.template.notification_titel??'Mögliches Feuer!'
                         }
                     },
-                    icon: 'notification_icon', 
-                    badge: 2, // gcm for ios, apn
-                    sound: result.template.reminder?'':result.template.alarmSound.toLowerCase()+'.wav', // gcm, apn with extension
-                    android_channel_id: result.template.reminder?'reminder':result.template.alarmSound, // gcm - Android Channel ID
+                    fcm_notification: {
+                        title: result.template.notification_titel??'Mögliches Feuer!',
+                        body: result.template.notification_body??'Achtung Alarm, bitte sofort prüfen!',
+                        channel_id: result.template.reminder?'reminder':result.template.alarmSound, // gcm - Android Channel ID
+                        sound: result.template.reminder?'':result.template.alarmSound.toLowerCase()+'.wav',
+                    },
+                    icon: 'notification_icon',
+                    sound: result.template.reminder?'':result.template.alarmSound.toLowerCase()+'.wav',
                     category: 'alarm', // apn and gcm for ios
                     truncateAtWordEnd: true, // apn and gcm for ios
                     mutableContent: 0, // apn
                     pushType: 'alert',
                 };
-                const result = await push.send(result.user.fcmToken, data);
+                const pushResult = await push.send(result.user.fcmToken, data);
 
-                if (result[0].failure > 0){
-                    logger.error("error on push: %O", result);
+                if (pushResult[0].failure > 0){
+                    console.error("error on push", JSON.stringify(pushResult));
 
-                    if(result[0].message[0].errorMsg == "NotRegistered" || result[0].message[0].errorMsg == "Requested entity was not found."){
-                        logger.error("FCM Token not registered anymore, deleting fcmtoken");
-                        // await strapi.services.user.update({ id }, ctx.request.body);
+                    if(pushResult[0].message[0].errorMsg == "NotRegistered" || pushResult[0].message[0].errorMsg == "Requested entity was not found."){
+                        console.error("FCM Token not registered anymore, deleting fcmtoken for user: ", result.user.id);
+                        result.user.fcmToken = null;
+                        await strapi.query('user', 'users-permissions').update({id:result.user.id}, result.user);
                     }
                 }
             } catch (err) {
-                logger.error("error on push: %O", err);
+                console.error("error on push", err);
             }
           
         },
