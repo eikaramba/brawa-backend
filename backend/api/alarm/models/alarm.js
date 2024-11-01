@@ -6,7 +6,9 @@
  */
 
 const PushNotifications = require("node-pushnotifications");
-const firebaseConfig = require('./../../../firebase.json');
+let firebaseConfig = process.env["FCM_SECRET"];
+if(firebaseConfig) firebaseConfig = JSON.parse(firebaseConfig);
+else firebaseConfig = require('./../../../firebase.json');
 
 const settings = {
 	fcm: {

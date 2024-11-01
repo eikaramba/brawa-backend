@@ -6,7 +6,7 @@ ADMIN_JWT_SECRET
 JWT_SECRET=
 ```
 
-Also you will need to generate the FCM private key from Firebase and put it as a firebase.json file into the /backend folder. See https://firebase.google.com/docs/admin/setup?hl=de#initialize_the_sdk_in_non-google_environments
+Also you will need to generate the FCM private key from Firebase and put it as a firebase.json file into the /backend folder. See https://firebase.google.com/docs/admin/setup?hl=de#initialize_the_sdk_in_non-google_environments - alternatively you can also put this json content into the FCM_SECRET environment variable.
 
 It uses Strapi as a Backend
 
