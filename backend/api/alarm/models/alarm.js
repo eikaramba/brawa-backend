@@ -33,6 +33,7 @@ module.exports = {
                     return;
                 }
                 const data = {
+                    collapseKey: Math.random().toString().replace('0.', ''),
                     title: result.template.notification_titel??'Mögliches Feuer!',
                     topic: 'all',
                     body: result.template.notification_body??'Achtung Alarm, bitte sofort prüfen!',
@@ -59,16 +60,11 @@ module.exports = {
                         }
                     },
                     fcm_notification: {
-                        title: result.template.notification_titel??'Mögliches Feuer!',
-                        body: result.template.notification_body??'Achtung Alarm, bitte sofort prüfen!',
-                        channel_id: result.template.reminder?'reminder':result.template.alarmSound, // gcm - Android Channel ID
-                        sound: result.template.reminder?'':result.template.alarmSound.toLowerCase()+'.wav',
                     },
                     icon: 'notification_icon',
                     sound: result.template.reminder?'':result.template.alarmSound.toLowerCase()+'.wav',
-                    category: 'alarm', // apn and gcm for ios
-                    truncateAtWordEnd: true, // apn and gcm for ios
-                    mutableContent: 0, // apn
+                    category: 'alarm',
+                    truncateAtWordEnd: true,
                     pushType: 'alert',
                 };
                 const pushResult = await push.send(result.user.fcmToken, data);
